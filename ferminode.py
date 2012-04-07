@@ -74,17 +74,17 @@ mean_wfgrid = mean(abs(wfgrid))
 for i in R:
     for j in R:
         #print abs(wavefunction([[i,j]] + otherelectrons))
-        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/100:
+        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/20:
             zerolocations.append([i,j])
 
 figure()
 zerox,zeroy = array(zerolocations).T
 plot(zerox,zeroy,'bo')
 otherelectronsplot = array(otherelectrons).T
-plot(otherelectronsplot[0],otherelectronsplot[1],'go')
+plot(otherelectronsplot[0],otherelectronsplot[1],'ro')
 xlim(0,2)
 ylim(0,2)
-savefig("plots/node-%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
+savefig("plots/nodes-%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
 savetxt("plots/wfgrid-%delectrons-%dmeshsize-%dlength.txt"%(numelectrons,meshsize,length), wfgrid)
 
 show()

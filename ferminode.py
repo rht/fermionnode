@@ -70,11 +70,11 @@ savefig("plots/%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,lengt
 
 zerolocations = []
 R = linspace(0,length,num=meshsize)
-mean_wfgrid = mean(wfgrid)
+mean_wfgrid = mean(abs(wfgrid))
 for i in R:
     for j in R:
         #print abs(wavefunction([[i,j]] + otherelectrons))
-        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/10:
+        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/100:
             zerolocations.append([i,j])
 
 figure()

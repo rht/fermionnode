@@ -1,7 +1,7 @@
 ##Early results
-![contour](../../raw/master/5electrons-100meshsize-2length.png)
+![contour](../raw/master/5electrons-100meshsize-2length.png)
 
-![nodes](../../raw/master/nodes-5electrons-100meshsize-2length.png)
+![nodes](../raw/master/nodes-5electrons-100meshsize-2length.png)
 
 
 ##Papers

@@ -1,7 +1,7 @@
 ##Early results
-![contour](5electrons-100meshsize-2length.png)
+![contour](fermionnode/blob/master/5electrons-100meshsize-2length.png)
 
-![nodes](nodes-5electrons-100meshsize-2length.png)
+![nodes](fermionnode/blob/master/nodes-5electrons-100meshsize-2length.png)
 
 
 ##Papers

@@ -1,6 +1,6 @@
 ##Early results
-![](5electrons-100meshsize-2length.png)
-![](nodes-5electrons-100meshsize-2length.png)
+![contour](5electrons-100meshsize-2length.png)
+![nodes](nodes-5electrons-100meshsize-2length.png)
 
 
 ##Papers

@@ -2,6 +2,7 @@ from __future__ import division
 from pylab import *
 from scipy.misc import factorial
 from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
+from itertools import permutations
 import mpl_toolkits.mplot3d.axes3d as plot3
 '''use this http://code.enthought.com/chaco/'''
 #random cool paper http://www.sciencemag.org/content/318/5852/949.full
@@ -9,6 +10,8 @@ import mpl_toolkits.mplot3d.axes3d as plot3
 
 meshsize = 100 
 length = 2
+higheststate = 3
+numelectrons = int(factorial(higheststate))  # number of permutations
 
 #initialize coordinates
 X = linspace(0,length,num=meshsize)
@@ -19,7 +22,8 @@ Y = X
 def phi(n):
     #@vectorize
     def result(x):
-        return sqrt(2./length) * sin(n[0]*pi*x[0]/length) * sin(n[1]*pi*x[1]/length)
+        #PBC
+        return sqrt(2./length) * cos(n[0]*2*pi*x[0]/length) * cos(n[1]*2*pi*x[1]/length)
     return result
 def E(n):
     #todo: make this 2D
@@ -40,9 +44,10 @@ ax = plot3.Axes3D(fig)
 X, Y = meshgrid(X,X)
 
 
-wavefunction = antisymmetrize([phi([1,1]),phi([1,2]),phi([2,1]),phi([2,2]),phi([1,3]),phi([3,1])]) # 5 electrons
+#wavefunction = antisymmetrize([phi([1,1]),phi([1,2]),phi([2,1]),phi([2,2]),phi([1,3]),phi([3,1])])
+wavefunction = antisymmetrize([phi(i) for i in permutations(range(1,higheststate+1))])
 wfgrid = zeros(shape=shape(X))
-otherelectrons = [randpos() for i in range(5)]
+otherelectrons = [randpos() for i in range(numelectrons-1)] # number of permutation -1
 for i in range(meshsize):
     for j in range(meshsize):
         wfgrid[i,j] = wavefunction([[X[i,j],Y[i,j]]] + otherelectrons)
@@ -51,7 +56,11 @@ ax.plot_surface(X,Y,wfgrid)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('$\psi$')
+savefig("plots/%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
 
+
+
+###NOW, for finding the nodes
 #root finding all star can be found here http://docs.scipy.org/doc/scipy-0.10.1/reference/optimize.html
 ##now, find nodes using fsolve or broyden1 or broyden2(broyden's "bad" method)
 #wavefunctionwith4variablesfixed = lambda x: [float(wavefunction([x[0],x[1],5,2,4,5])),0]
@@ -61,10 +70,11 @@ ax.set_zlabel('$\psi$')
 
 zerolocations = []
 R = linspace(0,length,num=meshsize)
-for i in R[1:-1]:
-    for j in R[1:-1]:
-        print abs(wavefunction([[i,j]] + otherelectrons))
-        if abs(wavefunction([[i,j]] + otherelectrons)) < 1e-8:
+mean_wfgrid = mean(wfgrid)
+for i in R:
+    for j in R:
+        #print abs(wavefunction([[i,j]] + otherelectrons))
+        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/10:
             zerolocations.append([i,j])
 
 figure()
@@ -74,6 +84,8 @@ otherelectronsplot = array(otherelectrons).T
 plot(otherelectronsplot[0],otherelectronsplot[1],'go')
 xlim(0,2)
 ylim(0,2)
+savefig("plots/node-%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
+savetxt("plots/wfgrid-%delectrons-%dmeshsize-%dlength.txt"%(numelectrons,meshsize,length), wfgrid)
 
 show()
 

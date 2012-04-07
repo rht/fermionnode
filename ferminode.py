@@ -4,13 +4,15 @@ from scipy.misc import factorial
 from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
 from itertools import permutations
 import mpl_toolkits.mplot3d.axes3d as plot3
+import time
 '''use this http://code.enthought.com/chaco/'''
 #random cool paper http://www.sciencemag.org/content/318/5852/949.full
 #http://physicsandphysicists.blogspot.com/2007/11/simplest-2-slit-and-decoherence.html
 
+starttime = time.time()
 meshsize = 100 
 length = 2
-higheststate = 3
+higheststate = 4
 numelectrons = int(factorial(higheststate))  # number of permutations
 
 #initialize coordinates
@@ -23,7 +25,7 @@ def phi(n):
     #@vectorize
     def result(x):
         #PBC
-        return sqrt(2./length) * cos(n[0]*2*pi*x[0]/length) * cos(n[1]*2*pi*x[1]/length)
+        return sqrt(2./length) * cos(n[0]*2*pi*x[0]/length) * cos(n[1]*2*pi*x[1]/length)*100000000
     return result
 def E(n):
     #todo: make this 2D
@@ -39,6 +41,9 @@ def antisymmetrize(Psis):
         return det(slatermatrix) / sqrt(factorial(N))
     return psi
 
+###############
+#Plotting the wavefunction cross section
+###############
 fig=figure()
 ax = plot3.Axes3D(fig)
 X, Y = meshgrid(X,X)
@@ -48,6 +53,10 @@ X, Y = meshgrid(X,X)
 wavefunction = antisymmetrize([phi(i) for i in permutations(range(1,higheststate+1))])
 wfgrid = zeros(shape=shape(X))
 otherelectrons = [randpos() for i in range(numelectrons-1)] # number of permutation -1
+#It will be hard to compare if the position of otherelectrons always change, so
+#24 electrons
+#otherelectrons = [array([ 1.4156458 ,  0.61850838]), array([ 1.10460647,  0.67602137]), array([ 1.69724783,  1.05551967]), array([ 1.1111193,  0.4182782]), array([ 0.81117111,  1.86703291]), array([ 1.12617196,  0.53396474]), array([ 1.42082103,  1.95538821]), array([ 1.7028005 ,  1.82304221]), array([ 0.13782677,  1.74442594]), array([ 1.91003568,  1.833085  ]), array([ 1.97984843,  1.97071588]), array([ 1.70103109,  0.8389556 ]), array([ 0.6029357 ,  1.24555397]), array([ 0.01928903,  0.51623989]), array([ 1.95794243,  1.85688722]), array([ 1.99433081,  0.81612825]), array([ 1.69033985,  0.64101047]), array([ 1.03335098,  0.16361   ]), array([ 1.92201494,  1.18299267]), array([ 0.26790975,  0.71625702]), array([ 0.56472414,  0.2837483 ]), array([ 1.42118901,  1.16702965]), array([ 0.4000738 ,  0.57757868])]
+
 for i in range(meshsize):
     for j in range(meshsize):
         wfgrid[i,j] = wavefunction([[X[i,j],Y[i,j]]] + otherelectrons)
@@ -56,6 +65,7 @@ ax.plot_surface(X,Y,wfgrid)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('$\psi$')
+title("wavefunction cross section for %d electrons" %(numelectrons))
 savefig("plots/%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
 
 
@@ -71,10 +81,11 @@ savefig("plots/%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,lengt
 zerolocations = []
 R = linspace(0,length,num=meshsize)
 mean_wfgrid = mean(abs(wfgrid))
+print mean_wfgrid
 for i in R:
     for j in R:
         #print abs(wavefunction([[i,j]] + otherelectrons))
-        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/20:
+        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/1000:
             zerolocations.append([i,j])
 
 figure()
@@ -84,7 +95,8 @@ otherelectronsplot = array(otherelectrons).T
 plot(otherelectronsplot[0],otherelectronsplot[1],'ro')
 xlim(0,2)
 ylim(0,2)
-savefig("plots/nodes-%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
+title("fermion nodes for %d electrons -- total time %fs" %(numelectrons,time.time()-starttime))
+savefig("plots/%delectrons-%dmeshsize-%dlength-nodes.png"%(numelectrons,meshsize,length))
 savetxt("plots/wfgrid-%delectrons-%dmeshsize-%dlength.txt"%(numelectrons,meshsize,length), wfgrid)
 
 show()

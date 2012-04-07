@@ -1,7 +1,7 @@
 ##Early results
 ![contour](https://github.com/rht/fermionnode/raw/master/plots/5electrons-100meshsize-2length.png)
 
-![nodes](https://github.com/rht/fermionnode/raw/master/plots/nodes-5electrons-100meshsize-2length.png)
+![nodes](https://github.com/rht/fermionnode/raw/master/plots/5electrons-100meshsize-2length-nodes.png)
 
 * meshsize = 500, numelectrons = 10 is too slow
 * as expected, all the 'position' of the other electrons lies along the node

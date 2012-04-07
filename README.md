@@ -16,10 +16,14 @@
 * urgent: how the zeros of slater determinant is efficiently calculated
 
 ##Done
+
 *Apr 6*
+
 *  Plot the slater-det gs wavefunction when N-1 electrons are fixed
 * Identify the nodes
+
 *Apr 7*
+
 * switch to use symmetric PBC instead of box boundary
 * time the python code using time.time()
 

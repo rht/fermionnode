@@ -1,9 +1,8 @@
 from __future__ import division
-from pylab import *
+from pyqm import *
 from scipy.misc import factorial
 from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
 from itertools import permutations
-import mpl_toolkits.mplot3d.axes3d as plot3
 import time
 '''use this http://code.enthought.com/chaco/'''
 #random cool paper http://www.sciencemag.org/content/318/5852/949.full
@@ -22,10 +21,9 @@ Y = X
 
 #eigenstate of electron in a 2D box
 def phi(n):
-    #@vectorize
     def result(x):
         #PBC
-        return sqrt(2./length) * cos(n[0]*2*pi*x[0]/length) * cos(n[1]*2*pi*x[1]/length)*100000000
+        return sqrt(2./length) * cos(n[0]*2*pi*x[0]/length) * cos(n[1]*2*pi*x[1]/length)
     return result
 def E(n):
     #todo: make this 2D
@@ -44,8 +42,6 @@ def antisymmetrize(Psis):
 ###############
 #Plotting the wavefunction cross section
 ###############
-fig=figure()
-ax = plot3.Axes3D(fig)
 X, Y = meshgrid(X,X)
 
 
@@ -61,10 +57,7 @@ for i in range(meshsize):
     for j in range(meshsize):
         wfgrid[i,j] = wavefunction([[X[i,j],Y[i,j]]] + otherelectrons)
 
-ax.plot_surface(X,Y,wfgrid)
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('$\psi$')
+plot2Dwavefunction(X,Y,wfgrid)
 title("wavefunction cross section for %d electrons" %(numelectrons))
 savefig("plots/%delectrons-%dmeshsize-%dlength.png"%(numelectrons,meshsize,length))
 
@@ -82,12 +75,16 @@ zerolocations = []
 R = linspace(0,length,num=meshsize)
 mean_wfgrid = mean(abs(wfgrid))
 print mean_wfgrid
-for i in R:
-    for j in R:
-        #print abs(wavefunction([[i,j]] + otherelectrons))
-        if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/1000:
-            zerolocations.append([i,j])
+for i in range(meshsize):
+    for j in range(meshsize):
+        #if abs(wavefunction([[i,j]] + otherelectrons)) < mean_wfgrid/100:
+        if abs(wfgrid[i,j]) < mean_wfgrid/20:
+            zerolocations.append([X[i,j],Y[i,j]])
 
+
+######
+## MAIN ENTREE
+######
 figure()
 zerox,zeroy = array(zerolocations).T
 plot(zerox,zeroy,'bo')
@@ -101,3 +98,35 @@ savetxt("plots/wfgrid-%delectrons-%dmeshsize-%dlength.txt"%(numelectrons,meshsiz
 
 show()
 
+
+
+
+
+####bisection method
+def bisect(f, a, b, e):
+	""" Determines zero between a and b using Bisection. """
+	n = 0
+	fa = f(a)
+	if fa == 0.0: return (a, n)
+	fb = f(b)
+	if fb == 0.0: return (b, n)
+		
+	while (abs(a-b) > e):
+		c = 0.5*(a+b)
+		fc = f(c)
+		
+		if fc == 0.0: return (c, n)
+		n = n + 1
+		if fb*fc < 0.0:
+			a = c
+			fa = fc
+		
+		else:
+			b = c
+			fb = fc
+	
+		
+	if fa < fb:
+		return (a, n)
+	else:
+		return (b, n)

@@ -23,7 +23,9 @@
 * read Quantum Monte Carlo simulations of solics http://rmp.aps.org/abstract/RMP/v73/i1/p33_1
 * read A fast and efficient algorithm for Slater determinant updates in quantum Monte Carlo simulations http://jcp.aip.org/resource/1/jcpsa6/v130/i20/p204105_s1
 * See Ceperley publications http://people.physics.illinois.edu/Ceperley/papers/index.htm
-* See Ceperley publications http://people.physics.illinois.edu/Ceperley/papers/index.htm
+* read http://prl.aps.org/pdf/PRL/v72/i15/p2442_1
+* read http://prb.aps.org/pdf/PRB/v44/i17/p9410_1
+* see http://code.google.com/p/pi-qmc/source/browse/trunk/src/fixednode/FreeParticleNodes.cc -> not useful
 
 
 

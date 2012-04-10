@@ -1,9 +1,10 @@
 from pylab import *
 from random import choice
+from mpl_toolkits.mplot3d import Axes3D
 
 length = 2.
 def fn(x): return sqrt(sum((x-length/2)**2))-.5
-meshsize = 50
+meshsize = 500
 X = linspace(0,length,num=meshsize+1)
 grid = arange(meshsize)
 
@@ -13,55 +14,71 @@ class bisect:
         self.cursor = array([choice(grid),choice(grid)])
         self.points = [array(self.cursor)]
         self.nodepoints = []
-        self.nodewf = []
         self.atnode = False
+        self.xdirection = 0
+        self.ydirection = 0
 
     def _inbound(self):
-        #return 0 <= self.cursor.all() < meshsize
-        return (0 <= self.cursor[0] < meshsize) and (0 <= self.cursor[0] < meshsize)
-    def _checksignflip(self):
-        return self.fn(x1) * self.fn(x2) > 0
+        return (0 <= self.cursor[0] < meshsize) and (0 <= self.cursor[1] < meshsize)
+    def _checksignflip(self,x1,x2):
+        print self.fn(x1)* self.fn(x2)
+        return self.fn(x1) * self.fn(x2) < 0
 
     def walk(self):
         cursorbefore = array(self.cursor)
         self.cursor += array([choice([-1,1]), choice([-1,1])])
         if not self._inbound():
             self.cursor = cursorbefore
+            self.walk()
         self.points.append(array(self.cursor))
 
     def search1stsignflip(self):
-        fninit = self.fn(self.cursor)
-        fntemp = float(fninit)
-        while fntemp*fninit > 0:
-            fntemp = self.fn(self.cursor)
-            xtemp = array(self.cursor)
-            print X[xtemp[0]],X[xtemp[1]],fntemp
+        cursorbefore = array(self.cursor)
+        while not self._checksignflip(cursorbefore,self.cursor):
+            cursorbefore = array(self.cursor)
             self.walk()
-        self.nodepoints.append(xtemp)
+        self.nodepoints.append(cursorbefore)
         self.nodepoints.append(self.cursor)
-        self.nodewf.append(fntemp)
-        self.nodewf.append(self.fn(self.cursor))
         print "found"
+        self.xdirection = cmp(self.cursor[0],cursorbefore[0])
+        self.ydirection = cmp(self.cursor[1],cursorbefore[1])
+        self.state = 1 # 1 for diagonal shift
 
 
     def searchnextsignflip(self):
-        fninit = self.nodewf[-1]
-        fntemp = float(fninit)
-        xtemp = array(self.cursor)
-        while fntemp*fninit > 0:
-            self.cursor = array(xtemp)
-            fntemp = self.fn(self.cursor)
-            self.walk()
+        cursorbefore = self.nodepoints[-2]
+        cursornow = self.nodepoints[-1]
+        print cursornow
+        #xmovement
+        if self.state:
+            #diagonal
+            if cmp(cursornow[0],cursorbefore[0]) == self.xdirection:
+                cursorused = cursorbefore
+                othercursor = cursornow
+            else:
+                cursorused = cursornow
+                othercursor = cursorbefore
+            self.cursor = cursorused + [2*self.xdirection,0]
+            if self._checksignflip(othercursor,self.cursor):
+                self.ydirection *= -1
+            else:
+                self.state = 0
+                self.xdirection *= -1
+        else:
+            #horizontal
+            self.cursor += [self.xdirection,-self.ydirection]
+            self.state = 1
+            if self._checksignflip(cursornow,self.cursor):
+                self.xdirection *= -1
         self.nodepoints.append(self.cursor)
-        self.nodewf.append(fntemp)
-        self.atnode = True
+
         print "found next"
 
     def searchsignflips(self):
         if not self.atnode:
             self.search1stsignflip()
             self.atnode = True
-        for i in range(10):
+        for i in xrange(5):
             self.searchnextsignflip()
             
 
@@ -70,10 +87,11 @@ a.searchsignflips()
 #a.search1stsignflip()
 
 
-
+figure()
+plot(*array([X[i] for i in a.nodepoints]).T)
 plot(*array([X[i] for i in a.points]).T)
 #plot(a.cursor[0],a.cursor[1],'ro',markerfacecolor='green')
-gca().add_patch(Circle((length/2.,length/2.),radius=.5,fill=False))
+gca().add_patch(Circle((length/2.-.1,length/2-.1),radius=.5,fill=False))
 xlim(0,length)
 ylim(0,length)
 show()

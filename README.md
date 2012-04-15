@@ -26,6 +26,7 @@
 * read http://prl.aps.org/pdf/PRL/v72/i15/p2442_1
 * read http://prb.aps.org/pdf/PRB/v44/i17/p9410_1
 * see http://code.google.com/p/pi-qmc/source/browse/trunk/src/fixednode/FreeParticleNodes.cc -> not useful
+* read http://physics.stackexchange.com/questions/11605/when-is-the-minus-sign-problem-in-quantum-simulations-an-obstacle
 
 
 

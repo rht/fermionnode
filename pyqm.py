@@ -88,7 +88,7 @@ def createvideo(spectrums,plotter):
         plotter(spectrums[i])
         filename = '%03d'%i + '.png'
         savefig(filename, dpi=100)
-        print 'Wrote file', filename
+        print('Wrote file '+ filename)
         clf()
     os.spawnvp(os.P_WAIT, 'ffmpeg', command)
 

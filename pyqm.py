@@ -7,6 +7,7 @@
 from pylab import *
 #from fipy import *
 from mpl_toolkits.mplot3d import Axes3D
+import os
 
 ##Pauli spin matrices
 sx = matrix([[0, 1],[ 1, 0]])
@@ -79,15 +80,17 @@ def plotsurfaceanimate(X,Y,Z):
         ax.plot_surface(X,Y,i)
         draw()
 
-def createvideo(spectrums,plotter):
+def createvideo(spectrums, plotter, directory=''):
         #http://dawes.wordpress.com/2007/12/04/animating-png-files/
         #http://stackoverflow.com/questions/4092927/generating-movie-from-python-without-saving-individual-frames-to-files
         #http://www.scipy.org/Cookbook/Matplotlib/Animations
     command = ('ffmpeg','-i', '%03d.png', 'out.mp4', '-r', '25')
+    #convert -delay 50 Th*.JPG anim.mpg
+
     for i in range(len(spectrums)):
-        plotter(spectrums[i])
-        filename = '%03d'%i + '.png'
-        savefig(filename, dpi=100)
+        plotter(*spectrums[i])
+        filename = directory + '%03d.png'%i
+        savefig(filename)
         print('Wrote file '+ filename)
         clf()
     os.spawnvp(os.P_WAIT, 'ffmpeg', command)

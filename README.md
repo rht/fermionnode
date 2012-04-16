@@ -5,9 +5,12 @@
 * as of April 7, 24 electrons require 5mins of simulation
 * comment: "the nodal surface for a real wavefunction is always closed loops. (Notice that the apparent ends at the edges of the box always have partners on the other side which is related by the periodic boundary conditions.) This is so because the nodes separate the regions of positive from regions of negative wavefunction and therefore can't end."
 * as of April 8, 24 electrons require 2mins of simulation
-* full performance report on April 8, 24e, 143s:
+  full performance report on April 8, 24e, 143s:
       * psi 5.882s ncalls 10000
       * result 114.826 ncalls 5760000
+  6e require 13.37s
+* performance report on April 16:
+      * 6e require 2.73
 
 ##Todo
 * implement diffusion monte carlo
@@ -40,10 +43,26 @@
 
 * switch to use symmetric PBC instead of box boundary
 * time the python code using time.time()
-* 
+
+**Apr 16**
+
+* implement reduced slater determinant
 
 ##Abandoned
 * use scipy.weave.blitz() to improve the slater determinant calculation. Meh, doesn't help that much
+* http://stackoverflow.com/questions/9337188/animating-a-contour-plot-in-matplotlib-using-funcanimation  not flexible. That's it
+```python
+fig = figure()
+ims = []
+for i in range(2):
+    otherelectronsplot += array([(0,.05)]).T
+    zerox,zeroy = bruteforcezerofinder(wfgrid,length,meshsize,X,Y)
+    wfgrid = wfgridcreator(wavefunction, X, Y, list(otherelectronsplot.T), meshsize)
+    ims.append(plot(zerox,zeroy,'bo'))
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit = True, repeat_delay = 1000)
+ani.save('blah.mp4')
+```
+
 
 ##Papers and references
 * MAIN review paper Fermion nodes http://www.springerlink.com/content/m344615283325722/fulltext.pdf

@@ -11,16 +11,17 @@ def randpos(dimension):  # random position chooser
     return length * random(dimension)
 
 
-def gridplotter(X, Y, wfgrid, otherelectronsplot):
+def gridplotter(X, Y, wfgrid, otherelectronsplot, save=True):
     #plot2Dwavefunction(X,Y,wfgrid)
     #pcolor(X,Y,wfgrid)
     wfcontour = contour(X, Y, wfgrid)
-    zerocontour = wfcontour.collections[3]
+    #zerocontour = wfcontour.collections[3]
     plot(otherelectronsplot[0], otherelectronsplot[1],'ro')
     title("wavefunction cross section for %d electrons time %fs" %(numelectrons,time.time()-starttime))
-    timestamp = time.strftime("%d%b%Y-%H-%M")
-    savefig("plots/%delectrons-%dmeshsize-%dlength-%s.png"%(numelectrons, meshsize, length,timestamp))
     colorbar()
+    timestamp = time.strftime("%d%b%Y-%H-%M")
+    if save:
+        savefig("plots/%delectrons-%dmeshsize-%dlength-%s.png"%(numelectrons, meshsize, length,timestamp))
     return wfcontour
 
 
@@ -36,8 +37,8 @@ def zeroplotter(zerox, zeroy, otherelectronsplot):
 starttime = time.time()
 meshsize = 100
 length = 2  # size of the box
-higheststate = 3
-numelectrons = int(factorial(higheststate))  # number of permutations
+higheststate = 4
+numelectrons = int(factorial(higheststate)) + 1 # number of permutations
 dimension = 2
 
 #initialize coordinates
@@ -56,21 +57,19 @@ otherelectronsplot = array(otherelectrons).T
 X, Y = meshgrid(X, X)
 
 wf_1particle = array([phi2D(i, length) for i in permutations(range(1,higheststate+1))])
-wavefunction = antisymmetrize(wf_1particle)  # old way
+wf_1particle = append(wf_1particle, phi2D((5,1),length))
 
 # precompute other electrons' determinant once for all
-#signed_otherelectrons_determinant = array([pow(-1, 2 + i) * antisymmetrize(delete(wf_1particle, i, 0))(otherelectrons) for i in range(numelectrons)])
-#print(signed_otherelectrons_determinant)
-#wavefunction = lambda x, y: sum([wf_1particle[i](x,y) * signed_otherelectrons_determinant[i]
-                              #for i in range(numelectrons)])
+# what does this physically mean?
+signed_otherelectrons_determinant = array([pow(-1, 2 + i) * antisymmetrize(delete(wf_1particle, i, 0))(otherelectrons) for i in range(numelectrons)])
+print(signed_otherelectrons_determinant)
+wavefunction = lambda x, y: sum([wf_1particle[i](x,y) * signed_otherelectrons_determinant[i] for i in range(numelectrons)])
 
-#print(wavefunction([[.1,.2]]))
-wfgrid = wfgridcreator(wavefunction, X, Y, otherelectrons, meshsize)
-#wfgrid = wavefunction(X,Y)
-#wfgrid = reduced_wfgridcreator(wavefunction, X, Y, meshsize)
-print(shape(wfgrid))
+print(wavefunction(.2,.3))
+#wfgrid = wfgridcreator(wavefunction, X, Y)
+#gridplotter(X, Y, wfgrid, otherelectronsplot, save=False)
+#show()
 
-gridplotter(X, Y, wfgrid, otherelectronsplot)
 #datas = [(X, Y, wfgrid, otherelectronsplot)]
 #for i in range(10):
     #datas.append((X, Y, wfgrid, array(otherelectronsplot)))

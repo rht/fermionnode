@@ -4,13 +4,14 @@
 * as expected, all the 'position' of the other electrons lies along the node
 * as of April 7, 24 electrons require 5mins of simulation
 * comment: "the nodal surface for a real wavefunction is always closed loops. (Notice that the apparent ends at the edges of the box always have partners on the other side which is related by the periodic boundary conditions.) This is so because the nodes separate the regions of positive from regions of negative wavefunction and therefore can't end."
-* as of April 8, 24 electrons require 2mins of simulation
+* as of April 8, 24 electrons require 2mins of simulation (remove duplication in calculation)
   full performance report on April 8, 24e, 143s:
       * psi 5.882s ncalls 10000
       * result 114.826 ncalls 5760000
   6e require 13.37s
-* performance report on April 16:
-      * 6e require 2.73
+* performance report on April 16: (new since the implementation of reduced slater det)
+      * result 3.119 ncalls 60150
+  6e require 2.73
 
 ##Todo
 * implement diffusion monte carlo
@@ -30,6 +31,7 @@
 * read http://prb.aps.org/pdf/PRB/v44/i17/p9410_1
 * see http://code.google.com/p/pi-qmc/source/browse/trunk/src/fixednode/FreeParticleNodes.cc -> not useful
 * read http://physics.stackexchange.com/questions/11605/when-is-the-minus-sign-problem-in-quantum-simulations-an-obstacle
+* http://stackoverflow.com/questions/1053928/python-numpy-very-large-matrices
 
 
 
@@ -46,7 +48,12 @@
 
 **Apr 16**
 
-* implement reduced slater determinant
+* implement reduced slater determinant. The old way is to blindly compute wf from scratch
+        ```python
+        wavefunction = antisymmetrize(wf_1particle)  # old way
+        ```
+* beware http://stackoverflow.com/questions/5956783/numpy-float-10x-slower-than-builtin-in-arithmetic-operations
+* implement http://stackoverflow.com/questions/6876377/numpy-arbitrary-precision-linear-algebra
 
 ##Abandoned
 * use scipy.weave.blitz() to improve the slater determinant calculation. Meh, doesn't help that much

@@ -3,14 +3,14 @@ from random import choice
 from mpl_toolkits.mplot3d import Axes3D
 
 length = 2.
-def fn(x): return sqrt(sum((x-length/2)**2))-.5
-meshsize = 500
+def fn(*x): return sqrt((x[0]-length/2)**2 + (x[1]-length/2)**2) - .5
+meshsize = 200
 X = linspace(0,length,num=meshsize+1)
 grid = arange(meshsize)
 
 class bisect:
     def __init__(self,fn=None):
-        self.fn=lambda x: fn(array([X[x[0]],X[x[1]]]))
+        self.fn=lambda x: fn(X[x[0]],X[x[1]])
         self.cursor = array([choice(grid),choice(grid)])
         self.points = [array(self.cursor)]
         self.nodepoints = []
@@ -21,7 +21,6 @@ class bisect:
     def _inbound(self):
         return (0 <= self.cursor[0] < meshsize) and (0 <= self.cursor[1] < meshsize)
     def _checksignflip(self,x1,x2):
-        print self.fn(x1)* self.fn(x2)
         return self.fn(x1) * self.fn(x2) < 0
 
     def walk(self):
@@ -29,7 +28,6 @@ class bisect:
         self.cursor += array([choice([-1,1]), choice([-1,1])])
         if not self._inbound():
             self.cursor = cursorbefore
-            self.walk()
         self.points.append(array(self.cursor))
 
     def search1stsignflip(self):
@@ -39,20 +37,20 @@ class bisect:
             self.walk()
         self.nodepoints.append(cursorbefore)
         self.nodepoints.append(self.cursor)
-        print "found"
-        self.xdirection = cmp(self.cursor[0],cursorbefore[0])
-        self.ydirection = cmp(self.cursor[1],cursorbefore[1])
+        print("found")
+        self.xdirection = sign(self.cursor[0] - cursorbefore[0])
+        self.ydirection = sign(self.cursor[1] - cursorbefore[1])
         self.state = 1 # 1 for diagonal shift
 
 
     def searchnextsignflip(self):
         cursorbefore = self.nodepoints[-2]
         cursornow = self.nodepoints[-1]
-        print cursornow
+        print(cursornow)
         #xmovement
         if self.state:
             #diagonal
-            if cmp(cursornow[0],cursorbefore[0]) == self.xdirection:
+            if sign(cursornow[0]-cursorbefore[0]) == self.xdirection:
                 cursorused = cursorbefore
                 othercursor = cursornow
             else:
@@ -72,26 +70,27 @@ class bisect:
                 self.xdirection *= -1
         self.nodepoints.append(self.cursor)
 
-        print "found next"
+        print("found next")
 
     def searchsignflips(self):
         if not self.atnode:
             self.search1stsignflip()
             self.atnode = True
-        for i in xrange(5):
+        for i in range(5):
             self.searchnextsignflip()
-            
+
 
 a = bisect(fn)
 a.searchsignflips()
 #a.search1stsignflip()
-
+A,B=meshgrid(X,X)
 
 figure()
+zc = contour(A,B,fn(A,B),levels=[0])
+#colorbar()
 plot(*array([X[i] for i in a.nodepoints]).T)
 plot(*array([X[i] for i in a.points]).T)
 #plot(a.cursor[0],a.cursor[1],'ro',markerfacecolor='green')
-gca().add_patch(Circle((length/2.-.1,length/2-.1),radius=.5,fill=False))
 xlim(0,length)
 ylim(0,length)
 show()

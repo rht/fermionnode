@@ -1,7 +1,9 @@
 from pylab import *
 from random import choice
 from mpl_toolkits.mplot3d import Axes3D
+from time import time
 
+t0 = time()
 length = 2.
 def fn(*x): return sqrt((x[0]-length/2)**2 + (x[1]-length/2)**2) - .5
 meshsize = 200
@@ -76,7 +78,7 @@ class bisect:
         if not self.atnode:
             self.search1stsignflip()
             self.atnode = True
-        for i in range(5):
+        for i in range(20):
             self.searchnextsignflip()
 
 
@@ -93,4 +95,5 @@ plot(*array([X[i] for i in a.points]).T)
 #plot(a.cursor[0],a.cursor[1],'ro',markerfacecolor='green')
 xlim(0,length)
 ylim(0,length)
+print(time()-t0)
 show()

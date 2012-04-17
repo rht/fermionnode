@@ -1,17 +1,39 @@
 ##Early results
-![nodes](https://github.com/rht/fermionnode/raw/master/plots/5electrons-100meshsize-2length-nodes.png)
+![nodes](https://github.com/rht/fermionnode/raw/master/plots/6electrons-100meshsize-2length-16Apr2012-15-55.png)
 
+##Done
+**Apr 6**
+
+*  Plot the slater-det gs wavefunction when N-1 electrons are fixed
+* Identify the nodes
 * as expected, all the 'position' of the other electrons lies along the node
-* as of April 7, 24 electrons require 5mins of simulation
+
+**Apr 7**
+
+* switch to use symmetric PBC instead of box boundary
+* python code cprofile-ing. slow
 * comment: "the nodal surface for a real wavefunction is always closed loops. (Notice that the apparent ends at the edges of the box always have partners on the other side which is related by the periodic boundary conditions.) This is so because the nodes separate the regions of positive from regions of negative wavefunction and therefore can't end."
+* as of April 7, 24 electrons require 5mins of simulation
 * as of April 8, 24 electrons require 2mins of simulation (remove duplication in calculation)
   full performance report on April 8, 24e, 143s:
       * psi 5.882s ncalls 10000
       * result 114.826 ncalls 5760000
   6e require 13.37s
+
+**Apr 16**
+
+* implement reduced slater determinant. The old way is to blindly compute wf from scratch
+        ```python
+        wavefunction = antisymmetrize(wf_1particle)  # old way
+        ```
 * performance report on April 16: (new since the implementation of reduced slater det)
-      * result 3.119 ncalls 60150
-  6e require 2.73
+        * 6e result 3.119s ncalls 60150
+  6e require 2.73s
+* beware http://stackoverflow.com/questions/5956783/numpy-float-10x-slower-than-builtin-in-arithmetic-operations
+* implement http://stackoverflow.com/questions/6876377/numpy-arbitrary-precision-linear-algebra
+* starting to implement slater determinant update. It should become O(N) as advertised by the paper here http://arxiv.org/pdf/0906.4354.pdf
+  A fast and efficient algorithm for Slater determinant updates in quantum Monte Carlo simulations http://jcp.aip.org/resource/1/jcpsa6/v130/i20/p204105_s1
+
 
 ##Todo
 * implement diffusion monte carlo
@@ -25,7 +47,6 @@
 * read http://altair.physics.ncsu.edu/articles.htm
 * read Path integrals in the theory of condensed helium http://rmp.aps.org/abstract/RMP/v67/i2/p279_1
 * read Quantum Monte Carlo simulations of solics http://rmp.aps.org/abstract/RMP/v73/i1/p33_1
-* read A fast and efficient algorithm for Slater determinant updates in quantum Monte Carlo simulations http://jcp.aip.org/resource/1/jcpsa6/v130/i20/p204105_s1
 * See Ceperley publications http://people.physics.illinois.edu/Ceperley/papers/index.htm
 * read http://prl.aps.org/pdf/PRL/v72/i15/p2442_1
 * read http://prb.aps.org/pdf/PRB/v44/i17/p9410_1
@@ -35,25 +56,6 @@
 
 
 
-##Done
-**Apr 6**
-
-*  Plot the slater-det gs wavefunction when N-1 electrons are fixed
-* Identify the nodes
-
-**Apr 7**
-
-* switch to use symmetric PBC instead of box boundary
-* time the python code using time.time()
-
-**Apr 16**
-
-* implement reduced slater determinant. The old way is to blindly compute wf from scratch
-        ```python
-        wavefunction = antisymmetrize(wf_1particle)  # old way
-        ```
-* beware http://stackoverflow.com/questions/5956783/numpy-float-10x-slower-than-builtin-in-arithmetic-operations
-* implement http://stackoverflow.com/questions/6876377/numpy-arbitrary-precision-linear-algebra
 
 ##Abandoned
 * use scipy.weave.blitz() to improve the slater determinant calculation. Meh, doesn't help that much
@@ -87,7 +89,7 @@ ani.save('blah.mp4')
 * Electronic Wave Functions. I. A General Method of Calculation for the Stationary States of Any Molecular System http://rspa.royalsocietypublishing.org/content/200/1063/542.short
 
 
-##Google keywords 
+##Google keywords
 * fermion node
 * fixed node quantum monte carlo
 * free fermion node
@@ -98,3 +100,15 @@ ani.save('blah.mp4')
 2. http://www.mathworks.com/matlabcentral/answers/15082-multiple-solutions-using-fsolve basically, square the wavefunction, and find the minimum using fmin
 3. bisection method. http://stackoverflow.com/questions/4326667/solving-equation-using-bisection-method -> but this example is only for 1D. more: http://stackoverflow.com/questions/3513660/multivariate-bisection-method
 4. random walk bisection method. will be implemented soon
+
+##sparse matrix
+[references](http://docs.scipy.org/doc/scipy/reference/sparse.html)
+[sparse linalg references](http://docs.scipy.org/doc/scipy/reference/sparse.linalg.html)
+http://csc.media.mit.edu/divisi efficient SVD
+http://stackoverflow.com/questions/2540059/scipy-sparse-arrays sparse benchmark
+
+
+###Readlater
+O(n) quantum monte carlo using maximally-localized wannier function
+http://prb.aps.org/abstract/PRB/v71/i12/e121105
+http://prl.aps.org/pdf/PRL/v87/i24/e246406

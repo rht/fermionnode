@@ -53,6 +53,8 @@
 * see http://code.google.com/p/pi-qmc/source/browse/trunk/src/fixednode/FreeParticleNodes.cc -> not useful
 * read http://physics.stackexchange.com/questions/11605/when-is-the-minus-sign-problem-in-quantum-simulations-an-obstacle
 * http://stackoverflow.com/questions/1053928/python-numpy-very-large-matrices
+* http://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_11/comp_phys_sose11/exercises/notes_private.pdf
+* http://stackoverflow.com/questions/599619/how-to-do-numerical-integration-with-quantum-harmonic-oscillator-wavefunction
 
 
 

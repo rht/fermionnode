@@ -17,11 +17,13 @@ def gridplotter(X, Y, wfgrid, otherelectrons_plot, save=True):
     wfcontour = contour(X, Y, wfgrid)
     #zerocontour = wfcontour.collections[3]
     plot(otherelectrons_plot[0], otherelectrons_plot[1],'ro')
-    title("wavefunction cross section for %d electrons time %fs" %(numelectrons,time.time()-starttime))
+    title("wavefunction cross section for %d electrons time %fs" %(numelectrons,
+        time.time()-starttime))
     colorbar()
     timestamp = time.strftime("%d%b%Y-%H-%M")
     if save:
-        savefig("plots/%delectrons-%dmeshsize-%dlength-%s.png"%(numelectrons, meshsize, length,timestamp))
+        savefig("plots/%delectrons-%dmeshsize-%dlength-%s.png"%(numelectrons,
+                  meshsize, length,timestamp))
     return wfcontour
 
 
@@ -48,7 +50,7 @@ Y = X
 otherelectrons = array([randpos(dimension) for i in range(numelectrons - 1)])
 #print(otherelectrons)
 #otherelectrons = [array([.2,.3])]
-otherelectrons_plot = otherelectrons
+otherelectrons_plot = otherelectrons.T
 
 
 ###############

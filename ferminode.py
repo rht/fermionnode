@@ -20,7 +20,7 @@ def gridplotter(X, Y, wfgrid, otherelectrons_plot, save=True):
     title("wavefunction cross section for %d electrons time %fs" %(numelectrons,
         time.time()-starttime))
     colorbar()
-    timestamp = time.strftime("%d%b%Y-%H-%M")
+    timestamp = time.strftime("%b%d%Y-%H-%M")
     if save:
         savefig("plots/%delectrons-%dmeshsize-%dlength-%s.png"%(numelectrons,
                   meshsize, length,timestamp))
@@ -72,7 +72,6 @@ for i in range(numelectrons):
     otherelectrons_slatermatrix_signed.append(eachsign * mat)
 wavefunction = lambda x, y: sum([wf_1particle[i](x,y) * otherelectrons_det_signed[i] for i in range(numelectrons)])
 
-print(wavefunction(.2,.3))
 
 
 #############
@@ -106,6 +105,7 @@ datas = [(otherelectrons, otherelectrons_det_signed, otherelectrons_slatermatrix
 deltar = zeros(shape=shape(otherelectrons))
 deltar[1] = array([0,.1])
 R = 1 + array([deltar.T * m for m in otherelectrons_slatermatrix_signed_inv])
-#newmatrixinv = (1 - array([m * deltar for m in otherelectrons_slatermatrix_signed_inv]) / R) * otherelectrons_slatermatrix_signed_inv
-#print(newmatrixinv)
+print(shape(R))
+newmatrixinv = (1 - array([m * deltar for m in otherelectrons_slatermatrix_signed_inv]) / R) * otherelectrons_slatermatrix_signed_inv
+print(newmatrixinv)
 

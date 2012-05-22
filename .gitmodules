@@ -1,0 +1,3 @@
+[submodule "fermionnode.wiki"]
+	path = fermionnode.wiki
+	url = git@github.com:rht/fermionnode.wiki.git

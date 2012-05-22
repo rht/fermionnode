@@ -53,7 +53,7 @@ def antisymmetrize(Psis):
         slatermatrix = matrix(array([[Psi(*x) for Psi in Psis]
                                      for x in xs]))
         slaterlogdet = slogdet(slatermatrix)
-        print(str(slaterlogdet) + " "+ str(slaterlogdet[0] * exp(slaterlogdet[1]) ))
+        #print(str(slaterlogdet) + " "+ str(slaterlogdet[0] * exp(slaterlogdet[1]) ))
         return slaterlogdet[0] * exp(slaterlogdet[1]) / sqrt(factorial(len(xs))), slatermatrix
     return psi
 

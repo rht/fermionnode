@@ -22,13 +22,8 @@
 
 **Apr 16**
 
-* implement reduced slater determinant. The old way is to blindly compute wf from scratch
-        ```python
-        wavefunction = antisymmetrize(wf_1particle)  # old way
-        ```
-* performance report on April 16: (new since the implementation of reduced slater det)
-        * 6e result 3.119s ncalls 60150
-  6e require 2.73s
+* implement reduced slater determinant. The old way is to blindly antisymmetrize wf from scratch each time
+* performance report on April 16: (new since the implementation of reduced slater det), 6e require 2.73s
 * beware http://stackoverflow.com/questions/5956783/numpy-float-10x-slower-than-builtin-in-arithmetic-operations
 * implement http://stackoverflow.com/questions/6876377/numpy-arbitrary-precision-linear-algebra
 * starting to implement slater determinant update. It should become O(N) as advertised by the paper here http://arxiv.org/pdf/0906.4354.pdf

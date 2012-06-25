@@ -1,7 +1,7 @@
 #from __future__ import division
 from pyqm import *
 from scipy.misc import factorial
-from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
+#from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
 from scipy.constants import hbar
 from itertools import permutations
 import time

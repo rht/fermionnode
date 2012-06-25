@@ -44,15 +44,18 @@ def pathplotter(X, l, wavefunction, otherelectrons):
     Y = m * X + c
     #l = (X[1] - X[0]) * sqrt(1 + m * m) * arange(len(X))
     #projected location of the electrons along the path
-    def project(r, m, c):
+    def project_point2line(r, m, c):
+        # project point r into line y = mx + c
+        # fear not, it's the good ol' high school geometry lol
         y1 = m * r[0] + c
-        unitvec = array([1, m])
-        unitvec /= norm(unitvec)
+        unitvec = array([1, m]) # here is the fancy way to do it in 1 line
+        unitvec /= norm(unitvec) # unitvec = (lambda x:x/norm(x))(array([1, m]))
+
         deltaxy = (r[1] - y1) * unitvec
         #return array([r[0], y1]) + deltaxy
         return r[0] + deltaxy[0]
-    index1 = square(project(e1, m, c) - X).argmin()
-    index2 = square(project(e2, m, c) - X).argmin()
+    index1 = square(project_point2line(e1, m, c) - X).argmin()
+    index2 = square(project_point2line(e2, m, c) - X).argmin()
     wf = array([wavefunction(X[i], Y[i]) for i in range(len(X))])
     plot(l, wf)
     plot(l[index1], [0], 'ro')
@@ -168,8 +171,8 @@ otherelectrons.updatepos(0, array([.1, .1 * m]))
 wf2 = pathplotter(X, l, otherelectrons.eff_wavefunction(), otherelectrons.pos)
 
 # again, plot again the difference
-otherelectrons.updatepos(0, array([.1, .1 * m]))
-wf3 = pathplotter(X, l, otherelectrons.eff_wavefunction(), otherelectrons.pos)
+#otherelectrons.updatepos(0, array([.1, .1 * m]))
+#wf3 = pathplotter(X, l, otherelectrons.eff_wavefunction(), otherelectrons.pos)
 
 figure()
 plot(l, wf2 - wf1)

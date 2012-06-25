@@ -50,6 +50,7 @@
 * http://stackoverflow.com/questions/1053928/python-numpy-very-large-matrices
 * http://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_11/comp_phys_sose11/exercises/notes_private.pdf
 * http://stackoverflow.com/questions/599619/how-to-do-numerical-integration-with-quantum-harmonic-oscillator-wavefunction
+* you're encouraged to implement the code from scratch, should be ..
 
 
 

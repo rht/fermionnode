@@ -1,5 +1,5 @@
 ##Early results
-![nodes](https://github.com/rht/fermionnode/raw/master/plots/6electrons-100meshsize-2length-16Apr2012-15-55.png)
+![nodes](https://github.com/rht/fermionnode/raw/master/plots/report2/113electrons-100meshsize-2length-Aug012012-02-15.png)
 
 ##Done
 **Jul 30**

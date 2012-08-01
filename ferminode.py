@@ -29,7 +29,7 @@ XX, YY = meshgrid(X, X)
 #########################################
 # Plotting the wavefunction cross section
 #########################################
-report = 2
+report = 3
 
 # report 0
 ##########
@@ -57,41 +57,43 @@ if report is 1:
 
 #1. Interactive plotting
 # learned from here http://kitchingroup.cheme.cmu.edu/software/python/matplotlib/interactive-annotations-in-matplotlib
-fig, ax = subplots()
-directory = tempdir()
-#figures = []
-i = 0
-def onclick(event):
-    print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %(event.button,
-    event.x, event.y, event.xdata, event.ydata)
-    otherelectrons.changepos(0, array([event.xdata, event.ydata]))
-    cla()
+if report is 2:
+    directory = tempdir()
+    i = 0
+    def onclick(event):
+        print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %(event.button,
+        event.x, event.y, event.xdata, event.ydata)
+        otherelectrons.changepos(0, array([event.xdata, event.ydata]))
+        cla()
+        otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
+        draw()
+        global i
+        filename = directory + '/%03d.png' % i
+        i+=1
+        savefig(filename)
+        #figures.append(filename)
+
     otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
-    fig.canvas.draw()
-    filename = directory + '/%03d.png' % i
-    i+=1
-    savefig(filename)
-    #figures.append(filename)
-
-otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
-fig.canvas.mpl_connect('button_press_event', onclick)
-raw_input()
-createvideofromdirectory(directory)
-exit()
+    fig.canvas.mpl_connect('button_press_event', onclick)
+    raw_input()
+    createvideofromdirectory(directory)
+    exit()
 
 
 
-#2. moving the electrons around
+#3. automatically moving the electrons around
 
-figures = []
-for i in range(10):
-    figures.append(figure())
-    otherelectrons.updatepos(0, array([.1, .00001 * i]))
-    otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
-            save=False)
+if report is 3:
+    figures = []
+    ioff()
+    for i in range(10):
+        figures.append(figure())
+        otherelectrons.updatepos(0, array([.01 * i, 0]))
+        otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
+                save=False)
 
-createvideo(figures)
-exit()
+    createvideo(figures,prefix=True)
+    exit()
 
 
 

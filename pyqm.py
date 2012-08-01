@@ -8,6 +8,7 @@ from pylab import *
 #from fipy import *
 from mpl_toolkits.mplot3d import Axes3D
 import os
+import time
 
 ##Pauli spin matrices
 sx = matrix([[0, 1],[ 1, 0]])
@@ -80,12 +81,13 @@ def plotsurfaceanimate(X,Y,Z):
         ax.plot_surface(X,Y,i)
         draw()
 
-def createvideo(figures):
+def createvideo(figures, prefix=None):
     #http://dawes.wordpress.com/2007/12/04/animating-png-files/
     #http://stackoverflow.com/questions/4092927/generating-movie-from-python-without-saving-individual-frames-to-files
     #http://www.scipy.org/Cookbook/Matplotlib/Animations
     import tempfile
     directory = tempfile.gettempdir()
+    os.spawnvp(os.P_WAIT, 'trash', ('trash', directory + '/*'))
     #http://forum.videohelp.com/threads/306745-Slow-motion-with-ffmpeg
     #http://ffmpeg.org/trac/ffmpeg/wiki/How%20to%20speed%20up%20/%20slow%20down%20a%20video
     command = ('ffmpeg','-i', directory + '/%03d.png', 'out.mp4', '-vcodec',
@@ -96,9 +98,11 @@ def createvideo(figures):
             #'vcodec=mpeg4:mbd2:trell', '-oac', 'copy', '-o', 'output.avi' )
     # -y is for auto-overwrite
     #convert -delay 50 Th*.JPG anim.mpg
+    if prefix: pref = time.strftime("%b%d%Y")
+    else: pref = ''
 
     for i in range(len(figures)):
-        filename = directory + '/%03d.png'%i
+        filename = directory + '/%s%03d.png'%(pref, i)
         figures[i].savefig(filename)
         #print('Wrote file '+ filename)
         clf()
@@ -112,7 +116,7 @@ def tempdir():
 
 
 def createvideofromdirectory(directory):
-    command = ('ffmpeg','-i', directory + '/%03d.png', 'out.mp4', '-vcodec',
+    command = ('ffmpeg','-i', directory + '/' + pref + '%03d.png', 'out.mp4', '-vcodec',
             'mpg4', '-vf', '"setpts=40.0*PTS"', '-y', '-r', '1')
     os.spawnvp(os.P_WAIT, 'ffmpeg', command)
 

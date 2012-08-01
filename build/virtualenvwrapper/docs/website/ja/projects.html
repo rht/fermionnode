@@ -1,0 +1,126 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>プロジェクト管理 &mdash; virtualenvwrapper v3.5 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="virtualenvwrapper v3.5 documentation" href="index.html" />
+    <link rel="next" title="Tips とトリック" href="tips.html" />
+    <link rel="prev" title="virtualenvwrapper を拡張する" href="plugins.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="tips.html" title="Tips とトリック"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="plugins.html" title="virtualenvwrapper を拡張する"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="project-management">
+<span id="id1"></span><h1>プロジェクト管理<a class="headerlink" href="#project-management" title="Permalink to this headline">¶</a></h1>
+<p><em class="xref std std-term">project directory</em> は virtualenv に関連付けられますが、開発を支援するために必要とされるコンポーネントをインストールするというより、普通は活発に開発中のソースコードを含みます。例えば、プロジェクトディレクトリは、バージョン管理システムからチェックアウトされたソースコード、まだバージョン管理システムにコミットされていないテストや実験的なファイルから作成された一時的なファイルを含むかもしれません。</p>
+<p>プロジェクトディレクトリが作成して、 <a class="reference internal" href="command_ref.html#command-mkvirtualenv"><em>mkvirtualenv</em></a> の代わりに <a class="reference internal" href="command_ref.html#command-mkproject"><em>mkproject</em></a> を実行するときに virtualenv を束縛します。既存のプロジェクトディレクトリを virtualenv に束縛するには <a class="reference internal" href="command_ref.html#command-setvirtualenvproject"><em>setvirtualenvproject</em></a> を使ってください。</p>
+<div class="section" id="id2">
+<h2>テンプレートの利用<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>新しいプロジェクトディレクトリは、空のディレクトリ、または <em class="xref std std-term">template</em> プラグインを使って作成されます。テンプレートは <a class="reference internal" href="command_ref.html#command-mkproject"><em>mkproject</em></a> の引数として指定します。複数のテンプレートも適用できます。例えば、bitbucket のプロジェクトから Mercurial リポジトリをチェックアウトして新たに Django サイトを作成するには、 <a class="reference internal" href="extensions.html#templates-bitbucket"><em>bitbucket</em></a> と <a class="reference internal" href="extensions.html#templates-django"><em>django</em></a> のテンプレートを組み合わせて使います。</p>
+<div class="highlight-python"><pre>$ mkproject -t bitbucket -t django my_site</pre>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="extensions.html#extensions-templates"><em>テンプレート</em></a></li>
+<li><a class="reference internal" href="install.html#variable-project-home"><em>プロジェクトディレクトリの場所</em></a></li>
+<li><a class="reference internal" href="install.html#variable-virtualenvwrapper-project-filename"><em>プロジェクトのリンクファイル名</em></a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">プロジェクト管理</a><ul>
+<li><a class="reference internal" href="#id2">テンプレートの利用</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="plugins.html"
+                        title="previous chapter">virtualenvwrapper を拡張する</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tips.html"
+                        title="next chapter">Tips とトリック</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/projects.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="tips.html" title="Tips とトリック"
+             >next</a></li>
+        <li class="right" >
+          <a href="plugins.html" title="virtualenvwrapper を拡張する"
+             >previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Doug Hellmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

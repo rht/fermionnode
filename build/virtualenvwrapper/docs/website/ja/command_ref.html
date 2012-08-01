@@ -1,0 +1,567 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>コマンドリファレンス &mdash; virtualenvwrapper v3.5 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="virtualenvwrapper v3.5 documentation" href="index.html" />
+    <link rel="next" title="virtualenvwrapper をカスタマイズする" href="hooks.html" />
+    <link rel="prev" title="インストール" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="hooks.html" title="virtualenvwrapper をカスタマイズする"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="install.html" title="インストール"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="command">
+<span id="id1"></span><h1>コマンドリファレンス<a class="headerlink" href="#command" title="Permalink to this headline">¶</a></h1>
+<p>全てのコマンドは次のようにターミナル上で使用されます。</p>
+<div class="section" id="id2">
+<h2>仮想環境を管理する<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mkvirtualenv">
+<span id="command-mkvirtualenv"></span><h3>mkvirtualenv<a class="headerlink" href="#mkvirtualenv" title="Permalink to this headline">¶</a></h3>
+<p>WORKON_HOME に新たな仮想環境を作成します。</p>
+<p>構文:</p>
+<div class="highlight-python"><pre>mkvirtualenv [-a project_path] [-i package] [-r requirements_file] [virtualenv options] ENVNAME</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">-i</span></tt>, <tt class="docutils literal"><span class="pre">-r</span></tt>, <tt class="docutils literal"><span class="pre">-h</span></tt> を除いた全てのコマンドラインオプションは <tt class="docutils literal"><span class="pre">virtualenv</span></tt> へ直接的に渡されます。新しい仮想環境は初期化された後に自動的にアクティブ化されます。</p>
+<div class="highlight-python"><pre>$ workon
+$ mkvirtualenv mynewenv
+New python executable in mynewenv/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(mynewenv)$ workon
+mynewenv
+(mynewenv)$</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">-a</span></tt> オプションは、既存のプロジェクトディレクトリに新しい環境を関連付けるのに使います。</p>
+<p><tt class="docutils literal"><span class="pre">-i</span></tt> オプションは、その環境を作成した後に指定したパッケージをインストールできます (このオプションを繰り返し使うことで複数のパッケージもインストールできます) 。</p>
+<p><tt class="docutils literal"><span class="pre">-r</span></tt> オプションは、インストールしたいパッケージ一覧を保存したテキストファイルを指定するのに使います。この引数のファイル名は <tt class="docutils literal"><span class="pre">pip</span> <span class="pre">-r</span></tt> へ渡されてインストールが行われます。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-premkvirtualenv"><em>premkvirtualenv</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postmkvirtualenv"><em>postmkvirtualenv</em></a></li>
+<li><a class="reference external" href="http://www.pip-installer.org/en/latest/requirements.html#the-requirements-file-format">requirements ファイルのフォーマット</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="mktmpenv">
+<span id="command-mktmpenv"></span><h3>mktmpenv<a class="headerlink" href="#mktmpenv" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">WORKON_HOME</span></tt> ディレクトリに新しい環境を作成します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mktmpenv</span> <span class="p">[</span><span class="n">VIRTUALENV_OPTIONS</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>一意な名前をもつ virtualenv 環境が生成されます。</p>
+<div class="highlight-python"><pre>$ mktmpenv
+Using real prefix '/Library/Frameworks/Python.framework/Versions/2.7'
+New python executable in 1e513ac6-616e-4d56-9aa5-9d0a3b305e20/bin/python
+Overwriting 1e513ac6-616e-4d56-9aa5-9d0a3b305e20/lib/python2.7/distutils/__init__.py
+with new content
+Installing distribute...............................................
+....................................................................
+.................................................................done.
+This is a temporary environment. It will be deleted when deactivated.
+(1e513ac6-616e-4d56-9aa5-9d0a3b305e20) $</pre>
+</div>
+</div>
+<div class="section" id="lsvirtualenv">
+<span id="command-lsvirtualenv"></span><h3>lsvirtualenv<a class="headerlink" href="#lsvirtualenv" title="Permalink to this headline">¶</a></h3>
+<p>全ての仮想環境を表示します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">lsvirtualenv</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-b</span></kbd></td>
+<td>ブリーフモード、冗長な出力を無効にする</td></tr>
+</tbody>
+</table>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-l</span></kbd></td>
+<td>ロングモード、冗長な出力を有効にする(デフォルト)</td></tr>
+</tbody>
+</table>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span></kbd></td>
+<td>lsvirtualenv のヘルプを表示する</td></tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-get-env-details"><em>get_env_details</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="showvirtualenv">
+<span id="command-showvirtualenv"></span><h3>showvirtualenv<a class="headerlink" href="#showvirtualenv" title="Permalink to this headline">¶</a></h3>
+<p>1つの仮想環境の詳細を表示します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">showvirtualenv</span> <span class="p">[</span><span class="n">env</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-get-env-details"><em>get_env_details</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="rmvirtualenv">
+<span id="command-rmvirtualenv"></span><h3>rmvirtualenv<a class="headerlink" href="#rmvirtualenv" title="Permalink to this headline">¶</a></h3>
+<p>WORKON_HOME の仮想環境を削除します。</p>
+<p>構文:</p>
+<div class="highlight-python"><pre>rmvirtualenv ENVNAME</pre>
+</div>
+<p>カレントの仮想環境を削除する前に <a class="reference internal" href="#command-deactivate"><em>deactivate</em></a> を実行しなければなりません。</p>
+<div class="highlight-python"><pre>(mynewenv)$ deactivate
+$ rmvirtualenv mynewenv
+$ workon
+$</pre>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-prermvirtualenv"><em>prermvirtualenv</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postrmvirtualenv"><em>postrmvirtualenv</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="cpvirtualenv">
+<span id="command-cpvirtualenv"></span><h3>cpvirtualenv<a class="headerlink" href="#cpvirtualenv" title="Permalink to this headline">¶</a></h3>
+<p>WORKON_HOME の仮想環境を複製します。</p>
+<p>構文:</p>
+<div class="highlight-python"><pre>cpvirtualenv ENVNAME TARGETENVNAME</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">コピー操作で作成された仮想環境は <a class="reference external" href="http://virtualenv.openplans.org/#making-environments-relocatable">再配置可能</a> です。</p>
+</div>
+<div class="highlight-python"><pre>$ workon
+$ mkvirtualenv source
+New python executable in source/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(source)$ cpvirtualenv source dest
+Making script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/easy_install relative
+Making script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/easy_install-2.6 relative
+Making script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/pip relative
+Script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/postactivate cannot be made relative (it's not a normal script that starts with #!/Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/python)
+Script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/postdeactivate cannot be made relative (it's not a normal script that starts with #!/Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/python)
+Script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/preactivate cannot be made relative (it's not a normal script that starts with #!/Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/python)
+Script /Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/predeactivate cannot be made relative (it's not a normal script that starts with #!/Users/dhellmann/Devel/virtualenvwrapper/tmp/dest/bin/python)
+(dest)$ workon
+dest
+source
+(dest)$</pre>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-precpvirtualenv"><em>precpvirtualenv</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postcpvirtualenv"><em>postcpvirtualenv</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-premkvirtualenv"><em>premkvirtualenv</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postmkvirtualenv"><em>postmkvirtualenv</em></a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>アクティブな仮想環境を制御する<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="workon">
+<h3>workon<a class="headerlink" href="#workon" title="Permalink to this headline">¶</a></h3>
+<p>作業する仮想環境を変更、または表示します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">workon</span> <span class="p">[</span><span class="n">environment_name</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">environment_name</span></tt> が与えられない場合は標準出力に利用可能な仮想環境を表示します。</p>
+<div class="highlight-python"><pre>$ workon
+$ mkvirtualenv env1
+  New python executable in env1/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env1)$ mkvirtualenv env2
+New python executable in env2/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env2)$ workon
+env1
+env2
+(env2)$ workon env1
+(env1)$ echo $VIRTUAL_ENV
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1
+(env1)$ workon env2
+(env2)$ echo $VIRTUAL_ENV
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env2
+(env2)$</pre>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-predeactivate"><em>predeactivate</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postdeactivate"><em>postdeactivate</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-preactivate"><em>preactivate</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postactivate"><em>postactivate</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="deactivate">
+<span id="command-deactivate"></span><h3>deactivate<a class="headerlink" href="#deactivate" title="Permalink to this headline">¶</a></h3>
+<p>仮想環境からシステムにインストールされた Python のバージョンに切り替えます。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">deactivate</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">このコマンドは、実際は virtualenv の一部ですが、まさに workon が行うようにアクティブ化のために、処理の前後にフック機能を提供するためにラップされます。</p>
+</div>
+<div class="highlight-python"><pre>$ workon
+$ echo $VIRTUAL_ENV
+
+$ mkvirtualenv env1
+New python executable in env1/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env1)$ echo $VIRTUAL_ENV
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1
+(env1)$ deactivate
+$ echo $VIRTUAL_ENV
+
+$</pre>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-predeactivate"><em>predeactivate</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postdeactivate"><em>postdeactivate</em></a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>仮想環境へ簡単に移動する<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>カレントのアクティブ化された仮想環境内へ移動するためのショートカットを提供する2つの機能があります。</p>
+<div class="section" id="cdvirtualenv">
+<h3>cdvirtualenv<a class="headerlink" href="#cdvirtualenv" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt> へカレントワークディレクトリを移動します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cdvirtualenv</span> <span class="p">[</span><span class="n">subdir</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">cdvirtualenv</span></tt> を呼び出すと、カレントワークディレクトリを仮想環境(<tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt>)のトップへ移動します。オプションの引数はそのパスに追加されて、サブディレクトリへ直接的に移動することもできます。</p>
+<div class="highlight-python"><pre>$ mkvirtualenv env1
+New python executable in env1/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env1)$ echo $VIRTUAL_ENV
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1
+(env1)$ cdvirtualenv
+(env1)$ pwd
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1
+(env1)$ cdvirtualenv bin
+(env1)$ pwd
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1/bin</pre>
+</div>
+</div>
+<div class="section" id="cdsitepackages">
+<h3>cdsitepackages<a class="headerlink" href="#cdsitepackages" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt> の <tt class="docutils literal"><span class="pre">site-packages</span></tt> へカレントワークディレクトリを移動します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cdsitepackages</span> <span class="p">[</span><span class="n">subdir</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>仮想環境の site-packages ディレクトリへの正確なパスは Python のバージョンに依存するので、 <tt class="docutils literal"><span class="pre">cdsitepackages</span></tt> は <tt class="docutils literal"><span class="pre">cdvirtualenv</span> <span class="pre">lib/python${pyvers}/site-packages</span></tt> のショートカットです。さらにオプションの引数は直接移動する <tt class="docutils literal"><span class="pre">site-packages</span></tt> 内の階層構造のディレクトリを指定することもできます。</p>
+<div class="highlight-python"><pre>$ mkvirtualenv env1
+New python executable in env1/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env1)$ echo $VIRTUAL_ENV
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1
+(env1)$ cdsitepackages PyMOTW/bisect/
+(env1)$ pwd
+/Users/dhellmann/Devel/virtualenvwrapper/tmp/env1/lib/python2.6/site-packages/PyMOTW/bisect</pre>
+</div>
+</div>
+<div class="section" id="lssitepackages">
+<h3>lssitepackages<a class="headerlink" href="#lssitepackages" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">lssitepackages</span></tt> を呼び出すと、カレントのアクティブ化された仮想環境の <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリのコンテンツを表示します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">lssitepackages</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>$ mkvirtualenv env1
+New python executable in env1/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env1)$ $ workon env1
+(env1)$ lssitepackages
+distribute-0.6.10-py2.6.egg     pip-0.6.3-py2.6.egg
+easy-install.pth                setuptools.pth</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>パス管理<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="add2virtualenv">
+<h3>add2virtualenv<a class="headerlink" href="#add2virtualenv" title="Permalink to this headline">¶</a></h3>
+<p>カレントのアクティブ化された仮想環境の Python パスへ指定したディレクトリを追加します。</p>
+<p>構文:</p>
+<div class="highlight-python"><pre>add2virtualenv directory1 directory2 ...</pre>
+</div>
+<p>システムの <tt class="docutils literal"><span class="pre">site-pacakges</span></tt> ディレクトリに存在しないインストール済みのパッケージやそれぞれの仮想環境にインストールしたくないパッケージを共有したいときがあります。1つの解決方法はその仮想環境の <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリへシンボリックリンクを張ることです。しかし、 <tt class="docutils literal"><span class="pre">add2virtualenv</span></tt> を使用して <tt class="docutils literal"><span class="pre">site-packages</span></tt> 内の <tt class="docutils literal"><span class="pre">.pth</span></tt> ファイルへそういったパッケージを含めることで、PYTHONPATH へ拡張ディレクトリを追加することも簡単です。</p>
+<ol class="arabic simple">
+<li>Django のような、大きなプロジェクトのソースをチェックアウトする</li>
+<li><tt class="docutils literal"><span class="pre">add2virtualenv</span> <span class="pre">path_to_source</span></tt> を実行する</li>
+<li><tt class="docutils literal"><span class="pre">add2virtualenv</span></tt> を実行する</li>
+<li>使用方法とカレントの &#8220;拡張された&#8221; パスリストが表示される</li>
+</ol>
+<p>site-packages ディレクトリ内の <tt class="docutils literal"><span class="pre">virtualenv_path_extensions.pth</span></tt> と名付けられたパスファイルへそのディレクトリ名が追加されます。</p>
+<p><em>James Bennett と Jannis Leidel から提供されたものに基づいています。</em></p>
+</div>
+<div class="section" id="toggleglobalsitepackages">
+<span id="command-toggleglobalsitepackages"></span><h3>toggleglobalsitepackages<a class="headerlink" href="#toggleglobalsitepackages" title="Permalink to this headline">¶</a></h3>
+<p>アクティブな virtualenv が、グローバルの Python <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリにあるパッケージにアクセスさせるかどうかを制御します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">toggleglobalsitepackages</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>実行すると virtualenv の更新後の状態を表示します。非表示にするには <tt class="docutils literal"><span class="pre">-q</span></tt> を指定してください。</p>
+<div class="highlight-python"><pre>$ mkvirtualenv env1
+New python executable in env1/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+(env1)$ toggleglobalsitepackages
+Disabled global site-packages
+(env1)$ toggleglobalsitepackages
+Enabled global site-packages
+(env1)$ toggleglobalsitepackages -q
+(env1)$</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>プロジェクトディレクトリの管理<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="projects.html#project-management"><em>プロジェクト管理</em></a></p>
+</div>
+<div class="section" id="mkproject">
+<span id="command-mkproject"></span><h3>mkproject<a class="headerlink" href="#mkproject" title="Permalink to this headline">¶</a></h3>
+<p>PROJECT_HOME にプロジェクトディレクトリと WORKON_HOME に新しい virtualenv を作成します。</p>
+<p>構文:</p>
+<div class="highlight-python"><pre>mkproject [-t template] [virtualenv_options] ENVNAME</pre>
+</div>
+<p>テンプレートオプションは、新しいプロジェクトを作成するのに使うテンプレートを複数指定できます。テンプレートはコマンドラインで指定した順番で適用されます。その他の全てのオプションは、プロジェクトと同じ名前をもつ仮想環境を作成するために <tt class="docutils literal"><span class="pre">mkvirtualenv</span></tt> に渡されます。</p>
+<div class="highlight-python"><pre>$ mkproject myproj
+New python executable in myproj/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+Creating /Users/dhellmann/Devel/myproj
+(myproj)$ pwd
+/Users/dhellmann/Devel/myproj
+(myproj)$ echo $VIRTUAL_ENV
+/Users/dhellmann/Envs/myproj
+(myproj)$</pre>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts-premkproject"><em>premkproject</em></a></li>
+<li><a class="reference internal" href="scripts.html#scripts-postmkproject"><em>postmkproject</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="setvirtualenvproject">
+<span id="command-setvirtualenvproject"></span><h3>setvirtualenvproject<a class="headerlink" href="#setvirtualenvproject" title="Permalink to this headline">¶</a></h3>
+<p>既存の virtualenv を既存のプロジェクトに束縛します。</p>
+<p>構文:</p>
+<div class="highlight-python"><pre>setvirtualenvproject [virtualenv_path project_path]</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">setvirtualenvproject</span></tt> への引数は、virtualenv とプロジェクトディレクトリへのフルパスです。仮想環境のアクティブ化を <tt class="docutils literal"><span class="pre">workon</span></tt> で行うときに、そのプロジェクトもアクティブ化されるように連携します。</p>
+<div class="highlight-python"><pre>$ mkproject myproj
+New python executable in myproj/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+Creating /Users/dhellmann/Devel/myproj
+(myproj)$ mkvirtualenv myproj_new_libs
+New python executable in myproj/bin/python
+Installing distribute.............................................
+..................................................................
+..................................................................
+done.
+Creating /Users/dhellmann/Devel/myproj
+(myproj_new_libs)$ setvirtualenvproject $VIRTUAL_ENV $(pwd)</pre>
+</div>
+<p>引数を指定しない場合は、カレントの virtualenv とカレントディレクトリが指定されたと見なします。</p>
+<p>任意の数の virtualenv が、Python またはその他のテスト向けの依存関係をもったバージョン間で切り替えやすいように、同じプロジェクトディレクトリを参照できます。</p>
+</div>
+<div class="section" id="cdproject">
+<span id="command-cdproject"></span><h3>cdproject<a class="headerlink" href="#cdproject" title="Permalink to this headline">¶</a></h3>
+<p>カレントのワークディレクトリから、アクティブな virtualenv のプロジェクトディレクトリとして指定したディレクトリに変更します。</p>
+<p>構文:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cdproject</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">コマンドリファレンス</a><ul>
+<li><a class="reference internal" href="#id2">仮想環境を管理する</a><ul>
+<li><a class="reference internal" href="#mkvirtualenv">mkvirtualenv</a></li>
+<li><a class="reference internal" href="#mktmpenv">mktmpenv</a></li>
+<li><a class="reference internal" href="#lsvirtualenv">lsvirtualenv</a></li>
+<li><a class="reference internal" href="#showvirtualenv">showvirtualenv</a></li>
+<li><a class="reference internal" href="#rmvirtualenv">rmvirtualenv</a></li>
+<li><a class="reference internal" href="#cpvirtualenv">cpvirtualenv</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">アクティブな仮想環境を制御する</a><ul>
+<li><a class="reference internal" href="#workon">workon</a></li>
+<li><a class="reference internal" href="#deactivate">deactivate</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">仮想環境へ簡単に移動する</a><ul>
+<li><a class="reference internal" href="#cdvirtualenv">cdvirtualenv</a></li>
+<li><a class="reference internal" href="#cdsitepackages">cdsitepackages</a></li>
+<li><a class="reference internal" href="#lssitepackages">lssitepackages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">パス管理</a><ul>
+<li><a class="reference internal" href="#add2virtualenv">add2virtualenv</a></li>
+<li><a class="reference internal" href="#toggleglobalsitepackages">toggleglobalsitepackages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">プロジェクトディレクトリの管理</a><ul>
+<li><a class="reference internal" href="#mkproject">mkproject</a></li>
+<li><a class="reference internal" href="#setvirtualenvproject">setvirtualenvproject</a></li>
+<li><a class="reference internal" href="#cdproject">cdproject</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">インストール</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="hooks.html"
+                        title="next chapter">virtualenvwrapper をカスタマイズする</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/command_ref.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="hooks.html" title="virtualenvwrapper をカスタマイズする"
+             >next</a></li>
+        <li class="right" >
+          <a href="install.html" title="インストール"
+             >previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Doug Hellmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

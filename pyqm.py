@@ -106,6 +106,16 @@ def createvideo(figures):
     #os.spawnvp(os.P_WAIT, 'mencoder', command)
     #os.spawnvp(os.P_WAIT, 'convert', command)
 
+def tempdir():
+    import tempfile
+    return tempfile.gettempdir()
+
+
+def createvideofromdirectory(directory):
+    command = ('ffmpeg','-i', directory + '/%03d.png', 'out.mp4', '-vcodec',
+            'mpg4', '-vf', '"setpts=40.0*PTS"', '-y', '-r', '1')
+    os.spawnvp(os.P_WAIT, 'ffmpeg', command)
+
 
 ##########################
 ###New since April 2012###

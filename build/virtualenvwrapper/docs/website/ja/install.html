@@ -1,0 +1,283 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>インストール &mdash; virtualenvwrapper v3.5 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="virtualenvwrapper v3.5 documentation" href="index.html" />
+    <link rel="next" title="コマンドリファレンス" href="command_ref.html" />
+    <link rel="prev" title="virtualenvwrapper 3.5" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="command_ref.html" title="コマンドリファレンス"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="index.html" title="virtualenvwrapper 3.5"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>インストール<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="supported-shells">
+<span id="id2"></span><h2>サポートシェル<a class="headerlink" href="#supported-shells" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper は Bourne シェル互換の構文をもつ一連のシェル <em>関数</em> です。Mac OS X と Linux 環境の、次のシェルで自動テストを行っています。</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">bash</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ksh</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">zsh</span></tt></li>
+</ul>
+<p>その他のシェルでも動作するかもしれません。ここに記載されていないシェルで動作するのを発見したら私に教えてください。また、その他のシェルでも動作するように virtualenvwrapper を全く違うものに書き換えずに修正できるなら、 <a class="reference external" href="https://bitbucket.org/dhellmann/virtualenvwrapper/">bitbucket のプロジェクトページ</a> から pull リクエストを送ってください。あなたが非互換なシェル上で動作させるクローンを作成するなら、このページでリンクを張るので私に連絡してください。</p>
+<div class="section" id="msys">
+<h3>MSYS<a class="headerlink" href="#msys" title="Permalink to this headline">¶</a></h3>
+<p>Python を Windows ネイティブにインストールした <a class="reference external" href="http://www.mingw.org/wiki/MSYS">MSYS</a> 環境でも virtualenvwrapper が使えます。そのためには、インストールした MSYS 環境へのルートパスを <tt class="docutils literal"><span class="pre">MSYS_HOME</span></tt> という環境変数で定義する必要があります。</p>
+<div class="highlight-python"><pre>export WORKON_HOME=$HOME/.virtualenvs
+export MSYS_HOME=/c/msys/1.0
+source /usr/local/bin/virtualenvwrapper.sh</pre>
+</div>
+<p>または:</p>
+<div class="highlight-python"><pre>export WORKON_HOME=$HOME/.virtualenvs
+export MSYS_HOME=C:\msys\1.0
+source /usr/local/bin/virtualenvwrapper.sh</pre>
+</div>
+<p>MSYS の設定によります。 <tt class="docutils literal"><span class="pre">MSYS_HOME/bin</span></tt> フォルダーに <a class="reference external" href="http://sourceforge.net/projects/mingw/files/MSYS/mktemp/">MSYS mktemp binary</a> をインストールする必要があるかもしれません。</p>
+</div>
+<div class="section" id="powershell">
+<h3>PowerShell<a class="headerlink" href="#powershell" title="Permalink to this headline">¶</a></h3>
+<p>Guillermo López-Anglada は、Microsoft の PowerShell 環境で実行できるように virtualenvwrapper を移植しました。それは他の拡張機能と互換性がなく、(機能拡張というよりは) 大幅な再実装であることから、別に配布するようにしました。 <a class="reference external" href="http://pypi.python.org/pypi/virtualenvwrapper-powershell/2.7.1">virtualenvwrapper-powershell</a> は、PyPI からダウンロードできます。</p>
+</div>
+</div>
+<div class="section" id="python">
+<span id="supported-versions"></span><h2>Python バージョン<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper は Python 2.4 - 2.7 でテストされています。</p>
+</div>
+<div class="section" id="install-basic">
+<span id="id4"></span><h2>基本的なインストール<a class="headerlink" href="#install-basic" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper は、virtualenv がインストールされているグローバルな site-packages ディレクトリと同じところにインストールする必要があります。それを行うには、管理者特権が必要になるかもしれません。最も簡単なインストール方法は <a class="reference external" href="http://pypi.python.org/pypi/pip">pip</a> を使うことです。</p>
+<div class="highlight-python"><pre>$ pip install virtualenvwrapper</pre>
+</div>
+<p>または:</p>
+<div class="highlight-python"><pre>$ sudo pip install virtualenvwrapper</pre>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">virtualenv を使うと、たくさんの独立した Python 環境を作成できます。システム環境に依存する全ての Python 環境から同じパッケージを共有できるように、システムにインストールされている Python (virtualenv がアクティブではない) に virtualenv と virtualenvwrapper の2つだけはインストールする必要があります。</p>
+</div>
+<p>グローバルの site-packages ディレクトリにインストールする代わりに <a class="reference external" href="http://docs.python.org/install/index.html#alternate-installation-the-home-scheme">ユーザーのローカルディレクトリ</a> (普通は <cite>~/.local</cite>) にインストールできます。</p>
+<div class="highlight-python"><pre>$ pip install --install-option="--user" virtualenvwrapper</pre>
+</div>
+</div>
+<div class="section" id="install-shell-config">
+<span id="id5"></span><h2>シェルの起動ファイル<a class="headerlink" href="#install-shell-config" title="Permalink to this headline">¶</a></h2>
+<p>シェルの起動ファイル (<tt class="docutils literal"><span class="pre">.bashrc</span></tt>, <tt class="docutils literal"><span class="pre">.profile</span></tt> など) に、仮想環境を構築する場所、開発中のプロジェクトディレクトリの場所、virtualenvwrapper がインストールしたシェルスクリプトの場所の3行を追加してください。</p>
+<div class="highlight-python"><pre>export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /usr/local/bin/virtualenvwrapper.sh</pre>
+</div>
+<p>編集後に起動ファイルを再読み込みしてください (例えば <tt class="docutils literal"><span class="pre">source</span> <span class="pre">~/.bashrc</span></tt> を実行する) 。</p>
+</div>
+<div class="section" id="id6">
+<h2>クイックスタート<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">workon</span></tt> を実行する</li>
+<li>仮想環境のリストが表示されるか、何も表示されない</li>
+<li><tt class="docutils literal"><span class="pre">mkvirtualenv</span> <span class="pre">temp</span></tt> を実行する</li>
+<li>新たな仮想環境 <tt class="docutils literal"><span class="pre">temp</span></tt> が作成されてアクティブ化される</li>
+<li><tt class="docutils literal"><span class="pre">workon</span></tt> を実行する</li>
+<li>このときに <tt class="docutils literal"><span class="pre">temp</span></tt> の仮想環境が提供される</li>
+</ol>
+</div>
+<div class="section" id="id7">
+<h2>設定<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper は、環境変数を変更することでカスタマイズできます。 <tt class="docutils literal"><span class="pre">virtualenvwrapper.sh</span></tt> が読み込まれる <em>前の</em> シェルの起動ファイルで環境変数を設定してください。</p>
+<div class="section" id="variable-workon-home">
+<span id="id8"></span><h3>仮想環境の場所<a class="headerlink" href="#variable-workon-home" title="Permalink to this headline">¶</a></h3>
+<p>環境変数 <tt class="docutils literal"><span class="pre">WORKON_HOME</span></tt> は、virtualenvwrapper が使う仮想環境の場所を指定します。デフォルト設定は <tt class="docutils literal"><span class="pre">$HOME/.virtualenvs</span></tt> です。virtualenvwrapper が読み込まれたときにそのディレクトリが存在しない場合は、自動的に作成されます。</p>
+</div>
+<div class="section" id="variable-project-home">
+<span id="id9"></span><h3>プロジェクトディレクトリの場所<a class="headerlink" href="#variable-project-home" title="Permalink to this headline">¶</a></h3>
+<p>環境変数 <tt class="docutils literal"><span class="pre">PROJECT_HOME</span></tt> は、virtualenvwrapper が使うプロジェクトのワークディレクトリの場所を指定します。この環境変数は <a class="reference internal" href="command_ref.html#command-mkproject"><em>mkproject</em></a> を利用する前に設定して、そのディレクトリを作成しておく必要があります。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="projects.html#project-management"><em>プロジェクト管理</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="variable-virtualenvwrapper-project-filename">
+<span id="id10"></span><h3>プロジェクトのリンクファイル名<a class="headerlink" href="#variable-virtualenvwrapper-project-filename" title="Permalink to this headline">¶</a></h3>
+<p>環境変数 <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_PROJECT_FILENAME</span></tt> は、virtualenvwrapper が使う、プロジェクトのワークディレクトリに対して virtualenv をリンクするファイル名を指定します。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="projects.html#project-management"><em>プロジェクト管理</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="variable-virtualenvwrapper-hook-dir">
+<span id="id11"></span><h3>フックスクリプトの場所<a class="headerlink" href="#variable-virtualenvwrapper-hook-dir" title="Permalink to this headline">¶</a></h3>
+<p>環境変数 <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_HOOK_DIR</span></tt> は、virtualenvwrapper が使う <a class="reference internal" href="scripts.html#scripts"><em>ユーザー定義のフック</em></a> が保存される場所を指定します。デフォルト設定 <tt class="docutils literal"><span class="pre">$WORKON_HOME</span></tt> です。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="scripts.html#scripts"><em>ユーザカスタマイズ</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="variable-virtualenvwrapper-log-dir">
+<span id="id12"></span><h3>フックログの場所<a class="headerlink" href="#variable-virtualenvwrapper-log-dir" title="Permalink to this headline">¶</a></h3>
+<p>環境変数 <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_LOG_DIR</span></tt> は、virtualenvwrapper のフックローダーが書き込むログの場所を指定します。デフォルト設定 <tt class="docutils literal"><span class="pre">$WORKON_HOME</span></tt> です。</p>
+</div>
+<div class="section" id="python-virtualenv-path">
+<span id="variable-virtualenvwrapper-python"></span><span id="variable-virtualenvwrapper-virtualenv-args"></span><span id="variable-virtualenvwrapper-virtualenv"></span><h3>Python インタープリターと virtualenv と $PATH<a class="headerlink" href="#python-virtualenv-path" title="Permalink to this headline">¶</a></h3>
+<p>起動ファイルの読み込み時に <tt class="docutils literal"><span class="pre">virtualenvwrapper.sh</span></tt> は、最初に <tt class="docutils literal"><span class="pre">$PATH</span></tt> 上の <tt class="docutils literal"><span class="pre">python</span></tt> と <tt class="docutils literal"><span class="pre">virtualenv</span></tt> を見つけて、後で使うためにその情報を覚えておきます。これは virtualenvwrapper がインストールされていない、または別のバージョンの virtualenv がインストールされた仮想環境内部でインタープリタを有効にしていながら <tt class="docutils literal"><span class="pre">$PATH</span></tt> 変更による競合が起こらないようにします。この動作の理由は <tt class="docutils literal"><span class="pre">virtualenvwrapper.sh</span></tt> を source する <strong>前に</strong> 設定された <tt class="docutils literal"><span class="pre">$PATH</span></tt> が重要だからです。</p>
+<p>例えば:</p>
+<div class="highlight-python"><pre>export PATH=/usr/local/bin:$PATH
+source /usr/local/bin/virtualenvwrapper.sh</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">$PATH</span></tt> の探索を上書きするには、
+利用するインタープリターのフルパスを指定した <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_PYTHON</span></tt> と、
+利用する <tt class="docutils literal"><span class="pre">virtualenv</span></tt> バイナリ指定した <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_VIRTUALENV</span></tt> のフルパスを設定してください。
+両方の環境変数は <tt class="docutils literal"><span class="pre">virtualenvwrapper.sh</span></tt> が source される前に <em>設定する必要があります</em> 。</p>
+<p>例えば:</p>
+<div class="highlight-python"><pre>export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
+source /usr/local/bin/virtualenvwrapper.sh</pre>
+</div>
+</div>
+<div class="section" id="virtualenv">
+<h3>virtualenv のデフォルト引数<a class="headerlink" href="#virtualenv" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_VIRTUALENV</span></tt> で指定されたアプリケーションが引数を取るなら、その引数を <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_VIRTUALENV_ARGS</span></tt> に設定できます。この環境変数は <tt class="docutils literal"><span class="pre">virtualenv</span></tt> に渡すデフォルト引数を設定するのにも使えます。例えば、システムの <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリと独立した仮想環境を毎回新たに作成するには、 <tt class="docutils literal"><span class="pre">--no-site-packages</span></tt> をその値として設定します。</p>
+<div class="highlight-python"><pre>export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'</pre>
+</div>
+</div>
+<div class="section" id="id13">
+<h3>一時ファイル<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>virtualenvwrapper は <tt class="docutils literal"><span class="pre">$TMPDIR</span></tt> に一時ファイルを作成します。その環境変数がセットされていない場合は <tt class="docutils literal"><span class="pre">/tmp</span></tt> を使用します。virtualenvwrapper 向けだけの一時ファイルの作成場所を変更するには <tt class="docutils literal"><span class="pre">VIRTUALENVWRAPPER_TMPDIR</span></tt> をセットしてください。</p>
+</div>
+<div class="section" id="id14">
+<h3>サイト全体の設定<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p>ほとんどの UNIX システムは、全てのユーザーに設定を適用する機能を提供します。これは典型的に2つの方法のいずれかを取ります。新しいアカウントの作成時の <em>skeleton</em> ファイルを編集するか、シェルのグローバルな起動ファイルを編集するかです。</p>
+<p>新しいアカウントの作成時にスケルトンファイルを編集する方法は、各ユーザーが virtualenvwrapper を読み込むようにあらかじめ設定された自分たちの起動ファイルをもちます。各ユーザーは、起動ファイルの該当行をコメントアウトしたり、削除することで設定を無効にできます。編集する必要のある適切なファイルを把握するには、オペレーティングシステム、またはシェルのドキュメントを参照してください。</p>
+<p>特定シェルのグローバルの起動ファイルを変更する方法は、そのシェルの全ユーザーに対して virtualenvwrapper が有効となり、各ユーザーが無効にすることはできません。編集する必要のある適切なファイルを把握するには、オペレーティングシステム、またはシェルのドキュメントを参照してください。</p>
+</div>
+</div>
+<div class="section" id="id15">
+<h2>2.9 へのアップグレード<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<p>バージョン 2.9 は、それまで別で配布していた <tt class="docutils literal"><span class="pre">virtualenvwrapper.project</span></tt> の機能を提供します。そのプロジェクト拡張の古いバージョンをインストールしているなら、アップグレード前にそれらを削除してください。</p>
+</div>
+<div class="section" id="x">
+<h2>1.x からのアップグレード<a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h2>
+<p>ラッパー関数を含むシェルスクリプトは 2.x バージョンで bash 以外のシェルをサポートするためにその名前が変更されました。あなたの起動ファイルの <tt class="docutils literal"><span class="pre">source</span> <span class="pre">/usr/local/bin/virtualenvwrapper_bashrc</span></tt> を <tt class="docutils literal"><span class="pre">source</span> <span class="pre">/usr/local/bin/virtualenvwrapper.sh</span></tt> へ変更してください。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">インストール</a><ul>
+<li><a class="reference internal" href="#supported-shells">サポートシェル</a><ul>
+<li><a class="reference internal" href="#msys">MSYS</a></li>
+<li><a class="reference internal" href="#powershell">PowerShell</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#python">Python バージョン</a></li>
+<li><a class="reference internal" href="#install-basic">基本的なインストール</a></li>
+<li><a class="reference internal" href="#install-shell-config">シェルの起動ファイル</a></li>
+<li><a class="reference internal" href="#id6">クイックスタート</a></li>
+<li><a class="reference internal" href="#id7">設定</a><ul>
+<li><a class="reference internal" href="#variable-workon-home">仮想環境の場所</a></li>
+<li><a class="reference internal" href="#variable-project-home">プロジェクトディレクトリの場所</a></li>
+<li><a class="reference internal" href="#variable-virtualenvwrapper-project-filename">プロジェクトのリンクファイル名</a></li>
+<li><a class="reference internal" href="#variable-virtualenvwrapper-hook-dir">フックスクリプトの場所</a></li>
+<li><a class="reference internal" href="#variable-virtualenvwrapper-log-dir">フックログの場所</a></li>
+<li><a class="reference internal" href="#python-virtualenv-path">Python インタープリターと virtualenv と $PATH</a></li>
+<li><a class="reference internal" href="#virtualenv">virtualenv のデフォルト引数</a></li>
+<li><a class="reference internal" href="#id13">一時ファイル</a></li>
+<li><a class="reference internal" href="#id14">サイト全体の設定</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id15">2.9 へのアップグレード</a></li>
+<li><a class="reference internal" href="#x">1.x からのアップグレード</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">virtualenvwrapper 3.5</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="command_ref.html"
+                        title="next chapter">コマンドリファレンス</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="command_ref.html" title="コマンドリファレンス"
+             >next</a></li>
+        <li class="right" >
+          <a href="index.html" title="virtualenvwrapper 3.5"
+             >previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Doug Hellmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

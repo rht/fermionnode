@@ -1,0 +1,394 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ユーザカスタマイズ &mdash; virtualenvwrapper v3.5 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="virtualenvwrapper v3.5 documentation" href="index.html" />
+    <link rel="up" title="virtualenvwrapper をカスタマイズする" href="hooks.html" />
+    <link rel="next" title="virtualenvwrapper を拡張する" href="plugins.html" />
+    <link rel="prev" title="virtualenvwrapper をカスタマイズする" href="hooks.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="plugins.html" title="virtualenvwrapper を拡張する"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="hooks.html" title="virtualenvwrapper をカスタマイズする"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li>
+          <li><a href="hooks.html" accesskey="U">virtualenvwrapper をカスタマイズする</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="scripts">
+<span id="id1"></span><h1>ユーザカスタマイズ<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h1>
+<p>エンドユーザのカスタマイズスクリプトは <em>読み込み</em> (シェル環境を変更できる) されるか、適切な条件で外部プログラムのように <em>実行</em> されるかのどちらかです。</p>
+<p>全ての環境に適用されるグローバルスクリプトは、 <a class="reference internal" href="install.html#variable-virtualenvwrapper-hook-dir"><em>VIRTUALENVWRAPPER_HOOK_DIR</em></a> で指定したディレクトリに置きます。ローカルスクリプトは virtualenv の <tt class="docutils literal"><span class="pre">bin</span></tt> ディレクトリに置きます。</p>
+<div class="section" id="get-env-details">
+<span id="scripts-get-env-details"></span><h2>get_env_details<a class="headerlink" href="#get-env-details" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">両方</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">環境名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/get_env_details</span></tt> は <tt class="docutils literal"><span class="pre">workon</span></tt> が引数無しで実行されるときに実行されます。そして、仮想環境のリストを表示します。仮想環境の名前が表示された後で、そのフックは環境毎に一度実行されて、その環境に関する追加情報を表示します。</p>
+</div>
+<div class="section" id="initialize">
+<span id="scripts-initialize"></span><h2>initialize<a class="headerlink" href="#initialize" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>あなたの環境に <tt class="docutils literal"><span class="pre">virtualenvwrapper.sh</span></tt> を読み込むときに <tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/initialize</span></tt> が読み込まれます。virtualenvwrapper が有効になるときにグローバルな設定を調整するために使用してください。</p>
+</div>
+<div class="section" id="premkvirtualenv">
+<span id="scripts-premkvirtualenv"></span><h2>premkvirtualenv<a class="headerlink" href="#premkvirtualenv" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">新しい環境名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/premkvirtualenv</span></tt> は仮想環境が作成された後で外部プログラムのように実行されますが、カレントの環境が新しい環境へ切り替わる前に実行されます。そのスクリプトのカレントワークディレクトリは <tt class="docutils literal"><span class="pre">$WORKON_HOME</span></tt> で、そのスクリプトへの引数として新しい環境の名前が渡されます。</p>
+</div>
+<div class="section" id="postmkvirtualenv">
+<span id="scripts-postmkvirtualenv"></span><h2>postmkvirtualenv<a class="headerlink" href="#postmkvirtualenv" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/postmkvirtualenv</span></tt> は、新しい環境が作成されてアクティブ化された後で読み込まれます。 <tt class="docutils literal"><span class="pre">-a</span></tt> &lt;project_path&gt; フラグを指定された場合、このスクリプトを読み込む前にプロジェクトディレクトリへのリンクを設定します。</p>
+</div>
+<div class="section" id="precpvirtualenv">
+<span id="scripts-precpvirtualenv"></span><h2>precpvirtualenv<a class="headerlink" href="#precpvirtualenv" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">オリジナルの環境名、新しい環境名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/precpvirtualenv</span></tt> は元の環境が複製されて再配置可能になるときに外部プログラムのように実行されますが、 <tt class="docutils literal"><span class="pre">premkvirtualenv</span></tt> フックが実行される前、もしくはカレントの環境が新しい環境へ切り替わる前に実行されます。そのスクリプトのカレントワークディレクトリは <tt class="docutils literal"><span class="pre">$WORKON_HOME</span></tt> で、そのスクリプトへの引数として元の環境名と新しい環境名が渡されます。</p>
+</div>
+<div class="section" id="postcpvirtualenv">
+<span id="scripts-postcpvirtualenv"></span><h2>postcpvirtualenv<a class="headerlink" href="#postcpvirtualenv" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/postcpvirtualenv</span></tt> は新しい環境が作成されてアクティブ化された後で読み込まれます。</p>
+</div>
+<div class="section" id="preactivate">
+<span id="scripts-preactivate"></span><h2>preactivate<a class="headerlink" href="#preactivate" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル、ローカル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">環境名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>グローバルの <tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/preactivate</span></tt> スクリプトは新しい仮想環境が有効になる前に実行されます。その環境名は1番目の引数として渡されます。</p>
+<p>ローカルの <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV/bin/preactivate</span></tt> フックは新しい仮想環境が有効になる前に実行されます。その環境名は1番目の引数として渡されます。</p>
+</div>
+<div class="section" id="postactivate">
+<span id="scripts-postactivate"></span><h2>postactivate<a class="headerlink" href="#postactivate" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル、ローカル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>グローバルの <tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/postactivate</span></tt> スクリプトは新しい仮想環境が有効になった後で読み込まれます。 <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt> はそのスクリプトが実行されるときに新しい環境を参照します。</p>
+<p>このサンプルスクリプトは <tt class="docutils literal"><span class="pre">_OLD_VIRTUAL_PS1</span></tt> を使用して仮想環境の名前と古い PS1 名前の間にスペースを追加します。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">PS1</span><span class="o">=</span><span class="s">&quot;(`basename </span><span class="se">\&quot;</span><span class="s">$VIRTUAL_ENV</span><span class="se">\&quot;</span><span class="s">`) $_OLD_VIRTUAL_PS1&quot;</span>
+</pre></div>
+</div>
+<p>ローカルの <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV/bin/postactivate</span></tt> スクリプトは新しい仮想環境が有効になった後で読み込まれます。 <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt> はそのスクリプトが実行されるときに新しい環境を参照します。</p>
+<p>この PyMOTW 環境のサンプルは PyMOTW に含まれるソースツリーを参照して PATH 変数とカレントワークディレクトリを変更します。</p>
+<div class="highlight-python"><pre>pymotw_root=/Users/dhellmann/Documents/PyMOTW
+cd $pymotw_root
+PATH=$pymotw_root/bin:$PATH</pre>
+</div>
+</div>
+<div class="section" id="predeactivate">
+<span id="scripts-predeactivate"></span><h2>predeactivate<a class="headerlink" href="#predeactivate" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル、ローカル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>ローカルの <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV/bin/predeactivate</span></tt> スクリプトはカレントの仮想環境が非アクティブ化される前に読み込まれます。そして、あなたの環境の設定をクリアしたり、無効にするために使用されます。 <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt> はそのスクリプトが実行されるときに古い環境を参照します。</p>
+<p>グローバルの <tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/predeactivate</span></tt> スクリプトはカレントの仮想環境が非アクティブ化される前に読み込まれます。 <tt class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></tt> はそのスクリプトが実行されるときに古い環境を参照します。</p>
+</div>
+<div class="section" id="postdeactivate">
+<span id="scripts-postdeactivate"></span><h2>postdeactivate<a class="headerlink" href="#postdeactivate" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル、ローカル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUAL_ENV/bin/postdeactivate</span></tt> スクリプトはカレントの仮想環境が非アクティブ化される前に読み込まれます。そして、あなたの環境の設定をクリアしたり、無効にするために使用されます。非アクティブ化される環境へのパスは <tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_LAST_VIRTUALENV</span></tt> でのみ有効です。</p>
+</div>
+<div class="section" id="prermvirtualenv">
+<span id="scripts-prermvirtualenv"></span><h2>prermvirtualenv<a class="headerlink" href="#prermvirtualenv" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">環境名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/prermvirtualenv</span></tt> スクリプトは仮想環境が削除される前に外部コマンドのように実行されます。そのスクリプトへの引数としてその環境のディレクトリに対するフルパスが渡されます。</p>
+</div>
+<div class="section" id="postrmvirtualenv">
+<span id="scripts-postrmvirtualenv"></span><h2>postrmvirtualenv<a class="headerlink" href="#postrmvirtualenv" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">環境名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$VIRTUALENVWRAPPER_HOOK_DIR/postrmvirtualenv</span></tt> スクリプトは仮想環境が削除された後で外部コマンドのように実行されます。そのスクリプトへの引数としてその環境のディレクトリに対するフルパスが渡されます。</p>
+</div>
+<div class="section" id="premkproject">
+<span id="scripts-premkproject"></span><h2>premkproject<a class="headerlink" href="#premkproject" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">新しいプロジェクト名</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">実行</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$WORKON_HOME/premkproject</span></tt> は、仮想環境が作成されてカレントの環境が新しい環境を指すように切り替わった後で、外部プログラムとして実行されます。
+但し、そのタイミングは新しいプロジェクトディレクトリが作成される前です。
+このスクリプトのカレントのワークディレクトリは <tt class="docutils literal"><span class="pre">$PROJECT_HOME</span></tt> となり、新しいプロジェクト名がこのスクリプトの引数として渡されます。</p>
+</div>
+<div class="section" id="postmkproject">
+<span id="scripts-postmkproject"></span><h2>postmkproject<a class="headerlink" href="#postmkproject" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">グローバル/ローカル:</th><td class="field-body">グローバル</td>
+</tr>
+<tr class="field"><th class="field-name">引数:</th><td class="field-body">無し</td>
+</tr>
+<tr class="field"><th class="field-name">読み込み/実行:</th><td class="field-body">読み込み</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">$WORKON_HOME/postmkproject</span></tt> は、新しい環境とプロジェクトディレクトリが作成されて virtualenv がアクティブ化された後で読み込まれます。カレントのワークディレクトリはプロジェクトディレクトリです。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ユーザカスタマイズ</a><ul>
+<li><a class="reference internal" href="#get-env-details">get_env_details</a></li>
+<li><a class="reference internal" href="#initialize">initialize</a></li>
+<li><a class="reference internal" href="#premkvirtualenv">premkvirtualenv</a></li>
+<li><a class="reference internal" href="#postmkvirtualenv">postmkvirtualenv</a></li>
+<li><a class="reference internal" href="#precpvirtualenv">precpvirtualenv</a></li>
+<li><a class="reference internal" href="#postcpvirtualenv">postcpvirtualenv</a></li>
+<li><a class="reference internal" href="#preactivate">preactivate</a></li>
+<li><a class="reference internal" href="#postactivate">postactivate</a></li>
+<li><a class="reference internal" href="#predeactivate">predeactivate</a></li>
+<li><a class="reference internal" href="#postdeactivate">postdeactivate</a></li>
+<li><a class="reference internal" href="#prermvirtualenv">prermvirtualenv</a></li>
+<li><a class="reference internal" href="#postrmvirtualenv">postrmvirtualenv</a></li>
+<li><a class="reference internal" href="#premkproject">premkproject</a></li>
+<li><a class="reference internal" href="#postmkproject">postmkproject</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="hooks.html"
+                        title="previous chapter">virtualenvwrapper をカスタマイズする</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plugins.html"
+                        title="next chapter">virtualenvwrapper を拡張する</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/scripts.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="plugins.html" title="virtualenvwrapper を拡張する"
+             >next</a></li>
+        <li class="right" >
+          <a href="hooks.html" title="virtualenvwrapper をカスタマイズする"
+             >previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li>
+          <li><a href="hooks.html" >virtualenvwrapper をカスタマイズする</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Doug Hellmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

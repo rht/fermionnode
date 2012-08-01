@@ -1,0 +1,190 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>開発者向け &mdash; virtualenvwrapper v3.5 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="virtualenvwrapper v3.5 documentation" href="index.html" />
+    <link rel="next" title="既存の拡張機能" href="extensions.html" />
+    <link rel="prev" title="Tips とトリック" href="tips.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="extensions.html" title="既存の拡張機能"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="tips.html" title="Tips とトリック"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>開発者向け<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>あなたが直接 virtualenvwrapper に貢献したいなら、次の説明が役に立つでしょう。パッチ、バグレポートや機能要求は <a class="reference external" href="http://bitbucket.org/dhellmann/virtualenvwrapper/">BitBucket サイト</a> で歓んで受け付けます。パッチや pull リクエストによる貢献はその修正を取り込んだり、優先度の配慮も行い易いでしょう。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">virtualenvwrapper のコアへ新しい機能を追加する前に、その代わりに機能拡張として実装すべきかどうかをよく考えてください。</p>
+</div>
+<div class="section" id="id2">
+<h2>ドキュメントを作成する<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper のドキュメントは reStructuredText で書かれていて Sphinx で HTML に変換されます。それは make コマンドでビルドされます。ドキュメントをビルドするために次のパッケージが必要になります。</p>
+<ul class="simple">
+<li>Sphinx</li>
+<li>docutils</li>
+</ul>
+<p>全てのツールが pip を使用して仮想環境内にインストールされたら、ドキュメントの HTML バージョンを生成するために <tt class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></tt> を実行してください。</p>
+<div class="highlight-python"><pre>$ make html
+rm -rf virtualenvwrapper/docs
+(cd docs &amp;&amp; make html SPHINXOPTS="-c sphinx/pkg")
+sphinx-build -b html -d build/doctrees  -c sphinx/pkg source build/html
+Running Sphinx v0.6.4
+loading pickled environment... done
+building [html]: targets for 2 source files that are out of date
+updating environment: 0 added, 2 changed, 0 removed
+reading sources... [ 50%] command_ref
+reading sources... [100%] developers
+
+looking for now-outdated files... none found
+pickling environment... done
+checking consistency... done
+preparing documents... done
+writing output... [ 33%] command_ref
+writing output... [ 66%] developers
+writing output... [100%] index
+
+writing additional files... search
+copying static files... WARNING: static directory '/Users/dhellmann/Devel/virtualenvwrapper/plugins/docs/sphinx/pkg/static' does not exist
+done
+dumping search index... done
+dumping object inventory... done
+build succeeded, 1 warning.
+
+Build finished. The HTML pages are in build/html.
+cp -r docs/build/html virtualenvwrapper/docs</pre>
+</div>
+<p>最終的なドキュメントの生成内容はサンドボックスの <tt class="docutils literal"><span class="pre">./virtualenvwrapper/docs</span></tt> にあります。</p>
+</div>
+<div class="section" id="id3">
+<h2>テストを実行する<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper のテストスイートは <a class="reference external" href="http://shunit2.googlecode.com/">shunit2</a> と <a class="reference external" href="http://codespeak.net/tox">tox</a> を使います。shunit2 のソースは <tt class="docutils literal"><span class="pre">tests</span></tt> ディレクトリに含まれていますが、tox は別途インストールする必要があります (<tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tox</span></tt>) 。</p>
+<p>bash, zsh, ksh 環境で Python 2.4 - 2.7 のテストを実行するには、hg リポジトリの最上位ディレクトリから <tt class="docutils literal"><span class="pre">tox</span></tt> を実行してください。</p>
+<p>個別のテストスクリプトを実行するには、次のように実行します。</p>
+<div class="highlight-python"><pre>$ tox tests/test_cd.sh</pre>
+</div>
+<p>Python のあるバージョンでテストを実行するには、tox を実行するときに適切な環境を指定します。</p>
+<div class="highlight-python"><pre>$ tox -e py27</pre>
+</div>
+<p>前述した特定テストと Python バージョンのテストを実行するには、2つの方法を組み合わせてください。</p>
+<div class="highlight-python"><pre>$ tox -e py27 tests/test_cd.sh</pre>
+</div>
+<p>既存のファイルを変更して新しいテストを追加するか、 <tt class="docutils literal"><span class="pre">tests</span></tt> ディレクトリに新しいスクリプトを作成してください。</p>
+</div>
+<div class="section" id="developer-templates">
+<span id="id4"></span><h2>新しいテンプレートの作成<a class="headerlink" href="#developer-templates" title="Permalink to this headline">¶</a></h2>
+<p>virtualenvwrapper.project テンプレートは <a class="reference external" href="http://www.doughellmann.com/docs/virtualenvwrapper/plugins.html">virtualenvwrapper plugins</a> と同じように動作します。
+<em>entry point</em> グループの名前は <tt class="docutils literal"><span class="pre">virtualenvwrapper.project.template</span></tt> です。
+<strong>run</strong> を実行する関数を参照する独自のエントリーポイントを設定してください
+(ソースフックはテンプレートをサポートしていません) 。</p>
+<p>テンプレート関数の引数は、作成するプロジェクトの名前です。
+カレントワークディレクトリは、プロジェクトのファイルを保持するために作成されたディレクトリです (<tt class="docutils literal"><span class="pre">$PROJECT_HOME/$envname</span></tt>) 。</p>
+<div class="section" id="id5">
+<h3>ヘルプテキスト<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>プロジェクトテンプレートとその他の virtualenvwrapper 拡張との違いは、ユーザーが指定したテンプレートのみが実行されることです。
+<tt class="docutils literal"><span class="pre">mkproject</span></tt> コマンドは、ユーザーへ利用できるテンプレート一覧表示するヘルプオプションがあります。
+テンプレート名は、登録されたエントリーポイントから取得される名前です。
+そして、テンプレートの説明は、テンプレート関数の docstrings を表示します。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">開発者向け</a><ul>
+<li><a class="reference internal" href="#id2">ドキュメントを作成する</a></li>
+<li><a class="reference internal" href="#id3">テストを実行する</a></li>
+<li><a class="reference internal" href="#developer-templates">新しいテンプレートの作成</a><ul>
+<li><a class="reference internal" href="#id5">ヘルプテキスト</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tips.html"
+                        title="previous chapter">Tips とトリック</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="extensions.html"
+                        title="next chapter">既存の拡張機能</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/developers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="extensions.html" title="既存の拡張機能"
+             >next</a></li>
+        <li class="right" >
+          <a href="tips.html" title="Tips とトリック"
+             >previous</a> |</li>
+        <li><a href="index.html">virtualenvwrapper v3.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Doug Hellmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 import sys
 from pylab import *
-from pyqm import createvideo
+from pyqm import createvideo, createvideofromdirectory, tempdir
 #from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
 from scipy.constants import hbar
 from scipy.misc import factorial

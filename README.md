@@ -72,6 +72,7 @@ for i in range(2):
 ani = animation.ArtistAnimation(fig, ims, interval=50, blit = True, repeat_delay = 1000)
 ani.save('blah.mp4')
 ```
+* cythonize
 
 
 ##Papers and references
@@ -85,6 +86,7 @@ ani.save('blah.mp4')
   current strategies: meron-cluster algorithm, stochastic quantization(doesn't work for fermions), fixed node method
 * more articles on fixed node method http://www.lorentz.leidenuniv.nl/~saarloos/Correlateds/fixednode.html
 * [Antisymmetrizer](http://en.wikipedia.org/wiki/Antisymmetrizer)
+* Cython: http://docs.cython.org/src/userguide/numpy_tutorial.html
 
 ###Electronic Wavefunction Calculations
 * Electronic Wave Functions. I. A General Method of Calculation for the Stationary States of Any Molecular System http://rspa.royalsocietypublishing.org/content/200/1063/542.short

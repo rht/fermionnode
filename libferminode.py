@@ -54,6 +54,7 @@ def antisymmetrize(Psis):
 
 
 #from scipy.weave import blitz
+#old
 def wfgridcreator(wavefunction, X, Y):
     '''return grid of a "complicated" function'''
     #meshsize = len(X)
@@ -203,13 +204,11 @@ class Electrons:
             # effective wf if you fix other electrons
             det, mat = antisymmetrize(delete(self.wf_1particle, i, 0))(self.pos)
 
-
-
             self.det_signed.append(eachsign * det)
             self.slatermatrix_signed.append(eachsign * mat)
-        #return otherelectrons_det_signed, otherelectrons_slatermatrix_signed
 
     #performancetestjuly31
+    #combine precompute_det and antisymmetrize together
     def precompute_det(self):
         def phi2D(n, length, x):
             return (sqrt(2. / length) *
@@ -217,6 +216,7 @@ class Electrons:
                             n[1]*2*float64(pi)*x[1]/length)))
         self.det_signed = []
         self.slatermatrix_signed = []
+        #crafted from the old wf_1particle
         almost_matrix = array([[phi2D(j, self.length, x) for j in
             self.quantum_numbers] for x in self.pos])
 

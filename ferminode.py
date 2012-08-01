@@ -1,6 +1,6 @@
 from libferminode import *
 import matplotlib.animation as animation
-#ion()
+ion()
 
 
 '''use this http://code.enthought.com/chaco/'''
@@ -14,7 +14,7 @@ import matplotlib.animation as animation
 
 meshsize = 100
 length = 2  # size of the box
-higheststate = 3
+higheststate = 5
 dimension = 2
 
 # initialize coordinates
@@ -48,11 +48,8 @@ if report0:
 ##########
 if report1:
     otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
-            save=True)
-    #import curses
-    #curses.initscr().getch()
-    #curses.endwin()
-    #raw_input()
+            save=False)
+    raw_input()
     exit()
 
 # report 2

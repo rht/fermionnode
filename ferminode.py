@@ -14,7 +14,7 @@ ion()
 
 meshsize = 100
 length = 2  # size of the box
-higheststate = 5
+higheststate = 3
 dimension = 2
 
 # initialize coordinates
@@ -29,15 +29,15 @@ XX, YY = meshgrid(X, X)
 #########################################
 # Plotting the wavefunction cross section
 #########################################
-report0, report1, report2 = 0, 1, 0
+report = 2
 
 # report 0
 ##########
-if report0:
-    # how does the wavefunction look like for 2 electrons in 1 dimension?
+if report is 0:
+    # what does the wavefunction look like for 2 electrons in 1 dimension?
     oneD2electrons = lambda x, y: (phi1D(1, length)(x) * phi1D(0, length)(y)-
     phi1D(0, length)(x) * phi1D(1, length)(y))
-    contour(XX, YY, wfgridcreator(oneD2electrons, XX, YY))
+    contour(XX, YY, oneD2electrons(XX, YY))
     xlabel("x1")
     ylabel("x2")
     savefig("plots/report0/ceperleyfig2.png")
@@ -46,9 +46,9 @@ if report0:
 
 # report 1, in 1 line
 ##########
-if report1:
+if report is 1:
     otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
-            save=False)
+            save=1)
     raw_input()
     exit()
 
@@ -57,22 +57,25 @@ if report1:
 
 #1. Interactive plotting
 # learned from here http://kitchingroup.cheme.cmu.edu/software/python/matplotlib/interactive-annotations-in-matplotlib
-fig = figure()
-#import copy
-#figures = []
+fig, ax = subplots()
+import copy
+from matplotlib.transforms import TransformNode
+figures = []
 def onclick(event):
     print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %(event.button,
     event.x, event.y, event.xdata, event.ydata)
     otherelectrons.changepos(0, array([event.xdata, event.ydata]))
+    #event.canvas.figure.clear()
     cla()
     otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
-    draw()
+    fig.canvas.draw()
     #figures.append(copy.deepcopy(fig))
+    figures.append(copy.deepcopy(event.canvas.figure.frozen()))
 
 otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
 fig.canvas.mpl_connect('button_press_event', onclick)
 raw_input()
-#createvideo(figures)
+createvideo(figures)
 exit()
 
 

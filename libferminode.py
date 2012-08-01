@@ -23,7 +23,7 @@ def phi2D(n, length):
                     #cos(n[0]*2*float64(pi)*x[0]/length) *
                     #cos(n[1]*2*float64(pi)*x[1]/length))
         return (sqrt(2. / length) *
-                    exp(1j*2*pi/length* (n[0]*x[0] + n[1]*x[1])))
+                    exp(1j*2*pi/length* dot(n, x)))
     return result
 
 
@@ -253,15 +253,13 @@ class Electrons:
         self.precompute_det()
 
 
-    def eff_wavefunction(self, x, y):
-        return sum([self.wf_1particle[i](x,y) *
-            self.det_signed[i] for i in range(self.N_electrons)])
-
-
     #performancetweakaug1
     def eff_wavefunction(self):
-        return vectorize(lambda x,y: dot(sqrt(2. / self.length) *
-                    exp(1j*2*pi/self.length*dot(self.quantum_numbers,(x,y))),
+#        return vectorize(lambda x,y: dot(sqrt(2. / self.length) *
+                    #exp(1j*2*pi/self.length*dot(self.quantum_numbers,(x,y))),
+            #array(self.det_signed)))
+        return vectorize(lambda x,y: dot(phi2D(self.quantum_numbers,
+            self.length)(x,y),
             array(self.det_signed)))
 
 

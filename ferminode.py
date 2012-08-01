@@ -1,5 +1,6 @@
 from libferminode import *
 import matplotlib.animation as animation
+#ion()
 
 
 '''use this http://code.enthought.com/chaco/'''
@@ -7,163 +8,97 @@ import matplotlib.animation as animation
 #http://physicsandphysicists.blogspot.com/2007/11/simplest-2-slit-and-decoherence.html
 
 
-def surfaceplotter(X, Y, wavefunction, otherelectrons, save=True):
-    wfgrid = wfgridcreator(wavefunction, X, Y)
-    otherelectrons_plot = otherelectrons.T
-    #plot2Dwavefunction(X,Y,wfgrid)
-    #pcolor(X,Y,wfgrid)
-    wfcontour = contour(X, Y, wfgrid)
-    #zerocontour = wfcontour.collections[3]
-    plot(otherelectrons_plot[0], otherelectrons_plot[1],'ro')
-    xlabel("x coordinate")
-    ylabel("y coordinate")
-    title("wavefunction cross section for %d electrons time %fs" %(numelectrons,
-        time.time()-starttime))
-    colorbar()
-    timestamp = time.strftime("%b%d%Y-%H-%M")
-    if save:
-        savefig("plots/report1/%delectrons-%dmeshsize-%dlength-%s.png"%(numelectrons,
-                  meshsize, length,timestamp))
-    return wfcontour
-
-
-def compute_line_param(r1, r2):
-    # find the parameter of y = mx + c from two points
-    deltaxy = r2 - r1
-    m = deltaxy[1] / deltaxy[0]
-    c = r2[1] - m * r1[0]
-    return m, c
-
-
-def pathplotter(X, l, wavefunction, otherelectrons):
-    # general solution can be found here
-    # http://stackoverflow.com/questions/7878398/how-to-extract-an-arbitrary-line-of-values-from-a-numpy-array
-    e1 = otherelectrons[0]
-    e2 = otherelectrons[-1]
-    m, c = compute_line_param(e1, e2)
-    Y = m * X + c
-    #l = (X[1] - X[0]) * sqrt(1 + m * m) * arange(len(X))
-    #projected location of the electrons along the path
-    def project_point2line(r, m, c):
-        # project point r into line y = mx + c
-        # fear not, it's the good ol' high school geometry lol
-        y1 = m * r[0] + c
-        unitvec = array([1, m]) # here is the fancy way to do it in 1 line
-        unitvec /= norm(unitvec) # unitvec = (lambda x:x/norm(x))(array([1, m]))
-
-        deltaxy = (r[1] - y1) * unitvec
-        #return array([r[0], y1]) + deltaxy
-        return r[0] + deltaxy[0]
-    index1 = square(project_point2line(e1, m, c) - X).argmin()
-    index2 = square(project_point2line(e2, m, c) - X).argmin()
-    wf = array([wavefunction(X[i], Y[i]) for i in range(len(X))])
-    plot(l, wf)
-    plot(l[index1], [0], 'ro')
-    plot(l[index2], [0], 'bo')
-    #axhline(0)
-    grid()
-    xlabel("path")
-    ylabel("$\psi$")
-    title("wavefunction line section")
-    return wf
-
-def zeroplotter(zerox, zeroy, otherelectrons):
-    otherelectrons_plot = otherelectrons.T
-    plot(zerox, zeroy, 'bo')
-    plot(otherelectrons_plot[0],otherelectrons_plot[1],'ro')
-    xlim(0,length)
-    ylim(0,length)
-    #title("fermion nodes for %d electrons -- total time %fs" %(numelectrons,time.time()-starttime))
-    #savefig("plots/%delectrons-%dmeshsize-%dlength-nodes-%s.png"%(numelectrons,meshsize,length,timestamp))
-    #savetxt("plots/wfgrid-%delectrons-%dmeshsize-%dlength-%s.txt"%(numelectrons,meshsize,length,timestamp), wfgrid)
-
-
 ################
 # Initialization
 ################
 
-starttime = time.time()
 meshsize = 100
 length = 2  # size of the box
 higheststate = 3
-numelectrons = int(factorial(higheststate))  # number of permutations
 dimension = 2
 
 # initialize coordinates
 X = linspace(0, length, num=meshsize)
 Y = X
 
-class Electrons:
-    def __init__(self, numelectrons, wf_1particle):
-        self.numelectrons = numelectrons
-        # generate position for background electrons, of dimension (n, 2)
-        self.pos = length * random((numelectrons - 1, 2))
-        print(self.pos)
-        self.wf_1particle = wf_1particle
-
-        # precompute other electrons' determinant once for all
-        # what does this physically mean?
-        self.precompute_det()
-
-    def precompute_det(self):
-        self.det_signed = []
-        self.slatermatrix_signed = []
-        for i in range(self.numelectrons):
-            eachsign = pow(-1, 2 + i)
-            # effective wf if you fix other electrons
-            det, mat = antisymmetrize(delete(self.wf_1particle, i, 0))(self.pos)
-            self.det_signed.append(eachsign * det)
-            self.slatermatrix_signed.append(eachsign * mat)
-        #return otherelectrons_det_signed, otherelectrons_slatermatrix_signed
-    def updatepos(self, index, deltaxy):
-        self.pos[index] += deltaxy
-        #brute force precompute det after each update
-        self.precompute_det()
-        #on progress, method to update the det efficiently
-        # update slatermatrix http://arxiv.org/pdf/0906.4354.pdf
-        #self.slatermatrix_signed_inv = [m.I for m in otherelectrons_slatermatrix_signed]
-        #datas = [(otherelectrons, otherelectrons_det_signed, otherelectrons_slatermatrix_signed_inv)]
-        #deltar = zeros(shape=shape(otherelectrons))
-        #deltar[1] = array([0,.1])
-        #R = 1 + array([deltar.T * m for m in otherelectrons_slatermatrix_signed_inv])
-        #newmatrixinv = (1 - array([m * deltar for m in otherelectrons_slatermatrix_signed_inv]) / R) * otherelectrons_slatermatrix_signed_inv
-        #print(newmatrixinv)
-
-
-    def eff_wavefunction(self):
-        return lambda x, y: sum([self.wf_1particle[i](x,y) *
-            self.det_signed[i] for i in range(self.numelectrons)])
+otherelectrons = Electrons(higheststate, length, meshsize=meshsize)
+XX, YY = meshgrid(X, X)
 
 
 
-
-##########################
-# wavefunction computation
-##########################
-# array of wavefunctions used in total ground state wf
-wf_1particle = array([phi2D(i, length) for i in permutations(range(1,higheststate+1))])
-#wf_1particle = append(wf_1particle, phi2D((5,1),length))
-
-otherelectrons = Electrons(numelectrons, wf_1particle)
-
-
-
-##################
-# PLOTTING TIME!!!
+#########################################
 # Plotting the wavefunction cross section
-##################
+#########################################
+report0, report1, report2 = 0, 1, 0
 
-# report 1
+# report 0
 ##########
-#XX, YY = meshgrid(X, X)
-#surfaceplotter(XX, YY, otherelectrons.eff_wavefunction(), otherelectrons.pos, save=False)
+if report0:
+    # how does the wavefunction look like for 2 electrons in 1 dimension?
+    oneD2electrons = lambda x, y: (phi1D(1, length)(x) * phi1D(0, length)(y)-
+    phi1D(0, length)(x) * phi1D(1, length)(y))
+    contour(XX, YY, wfgridcreator(oneD2electrons, XX, YY))
+    xlabel("x1")
+    ylabel("x2")
+    savefig("plots/report0/ceperleyfig2.png")
+    exit()
 
+
+# report 1, in 1 line
+##########
+if report1:
+    otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
+            save=True)
+    #import curses
+    #curses.initscr().getch()
+    #curses.endwin()
+    #raw_input()
+    exit()
 
 # report 2
 ##########
+
+#1. Interactive plotting
+# learned from here http://kitchingroup.cheme.cmu.edu/software/python/matplotlib/interactive-annotations-in-matplotlib
+fig = figure()
+#import copy
+#figures = []
+def onclick(event):
+    print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %(event.button,
+    event.x, event.y, event.xdata, event.ydata)
+    otherelectrons.changepos(0, array([event.xdata, event.ydata]))
+    cla()
+    otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
+    draw()
+    #figures.append(copy.deepcopy(fig))
+
+otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction())
+fig.canvas.mpl_connect('button_press_event', onclick)
+raw_input()
+#createvideo(figures)
+exit()
+
+
+
+#2. moving the electrons around
+
+figures = []
+for i in range(10):
+    figures.append(figure())
+    otherelectrons.updatepos(0, array([.1, .00001 * i]))
+    otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
+            save=False)
+
+createvideo(figures)
+exit()
+
+
+
+
 m, c = compute_line_param(otherelectrons.pos[0], otherelectrons.pos[1])
 l = (X[1] - X[0]) * sqrt(1 + m * m) * arange(len(X))
 
+figure()
 wf1 = pathplotter(X, l, otherelectrons.eff_wavefunction(), otherelectrons.pos)
 otherelectrons.updatepos(0, array([.1, .1 * m]))
 
@@ -176,7 +111,7 @@ wf2 = pathplotter(X, l, otherelectrons.eff_wavefunction(), otherelectrons.pos)
 
 figure()
 plot(l, wf2 - wf1)
-show()
+#show()
 
 
 
@@ -191,10 +126,4 @@ show()
     #wfgrid = wfgridcreator(wavefunction, X, Y, list(otherelectrons_plot.T), meshsize)
     #datas.append((zerox, zeroy, array(otherelectrons_plot)))
 #createvideo(datas, zeroplotter, directory="animatenode/")
-
-
-
-##############################
-# moving otherelectrons around
-##############################
 

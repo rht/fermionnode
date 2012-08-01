@@ -2,6 +2,9 @@
 ![nodes](https://github.com/rht/fermionnode/raw/master/plots/6electrons-100meshsize-2length-16Apr2012-15-55.png)
 
 ##Done
+**Jul 30**
+6 electron 100 meshsize improves from 2.12s to 1.68s
+
 **Apr 6**
 
 *  Plot the slater-det gs wavefunction when N-1 electrons are fixed

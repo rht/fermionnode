@@ -12,13 +12,14 @@ grid = arange(meshsize)
 
 class bisect:
     def __init__(self,fn=None):
-        self.fn=lambda x: fn(X[x[0]],X[x[1]])
+        self.fn = lambda x: fn(X[x[0]],X[x[1]])
         self.cursor = array([choice(grid),choice(grid)])
         self.points = [array(self.cursor)]
         self.nodepoints = []
         self.atnode = False
         self.xdirection = 0
         self.ydirection = 0
+        self.diagonal = 0
 
     def _inbound(self):
         return (0 <= self.cursor[0] < meshsize) and (0 <= self.cursor[1] < meshsize)
@@ -30,7 +31,9 @@ class bisect:
         self.cursor += array([choice([-1,1]), choice([-1,1])])
         if not self._inbound():
             self.cursor = cursorbefore
-        self.points.append(array(self.cursor))
+            self.walk()
+        else:
+            self.points.append(array(self.cursor))
 
     def search1stsignflip(self):
         cursorbefore = array(self.cursor)
@@ -42,7 +45,8 @@ class bisect:
         print("found")
         self.xdirection = sign(self.cursor[0] - cursorbefore[0])
         self.ydirection = sign(self.cursor[1] - cursorbefore[1])
-        self.state = 1 # 1 for diagonal shift
+        self.diagonal = 1 # 1 for diagonal shift
+        self.atnode = True
 
 
     def searchnextsignflip(self):
@@ -50,7 +54,7 @@ class bisect:
         cursornow = self.nodepoints[-1]
         print(cursornow)
         #xmovement
-        if self.state:
+        if self.diagonal:
             #diagonal
             if sign(cursornow[0]-cursorbefore[0]) == self.xdirection:
                 cursorused = cursorbefore
@@ -62,12 +66,12 @@ class bisect:
             if self._checksignflip(othercursor,self.cursor):
                 self.ydirection *= -1
             else:
-                self.state = 0
+                self.diagonal = 0
                 self.xdirection *= -1
         else:
             #horizontal
             self.cursor += [self.xdirection,-self.ydirection]
-            self.state = 1
+            self.diagonal = 1
             if self._checksignflip(cursornow,self.cursor):
                 self.xdirection *= -1
         self.nodepoints.append(self.cursor)
@@ -77,7 +81,6 @@ class bisect:
     def searchsignflips(self):
         if not self.atnode:
             self.search1stsignflip()
-            self.atnode = True
         for i in range(20):
             self.searchnextsignflip()
 
@@ -90,10 +93,17 @@ A,B=meshgrid(X,X)
 figure()
 zc = contour(A,B,fn(A,B),levels=[0])
 #colorbar()
+print "foo", a.nodepoints[-1][0]
+print "bar", X[a.nodepoints[-1]]
 plot(*array([X[i] for i in a.nodepoints]).T)
 plot(*array([X[i] for i in a.points]).T)
 #plot(a.cursor[0],a.cursor[1],'ro',markerfacecolor='green')
-xlim(0,length)
-ylim(0,length)
+xmin, ymin = min(array(a.nodepoints).T[0]), min(array(a.nodepoints).T[1])
+xmax, ymax = max(array(a.nodepoints).T[0]), max(array(a.nodepoints).T[1])
+print xmin, ymin, xmax, ymax
+#xlim(0,length)
+#xlim(xmin-1,xmax+1)
+#ylim(0,length)
+#ylim(ymin-1,ymax+1)
 print(time()-t0)
 show()

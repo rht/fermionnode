@@ -1,10 +1,10 @@
+#from __future__ import division
 import sys
-from pylab import *
-from pyqm import createvideo
+from pyqm import *
+from scipy.misc import factorial
 #from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
 from scipy.constants import hbar
-from scipy.misc import factorial
-from itertools import permutations, product
+from itertools import permutations
 import time
 
 # QHE
@@ -12,27 +12,13 @@ import time
 # http://online.physics.uiuc.edu/courses/phys598PTD/fall09/L16.pdf
 
 
-def phi2D(n, length):
-    '''eigenstate of electron in a 2D periodic box.
-       n is a tuple for quantum number (nx, ny)
-       real part, hence e^ikx and e^-ikx will look the same
-    '''
-    def result(*x):
-        #PBC
-        #return (sqrt(2. / length) *
-                    #cos(n[0]*2*float64(pi)*x[0]/length) *
-                    #cos(n[1]*2*float64(pi)*x[1]/length))
-        return (sqrt(2. / length) *
-                    exp(1j*2*pi/length* (n[0]*x[0] + n[1]*x[1])))
-    return result
 
-
-def phi1D(n, length):
+def phi1D(n,float length):
     '''eigenstate of electron in a 1D periodic box'''
     def result(x):
         #PBC
         return (sqrt(2. / length) *
-                    exp(1j*n*2*float64(pi)*x/length))
+                    cos(n*2*float64(pi)*x/length))
     return result
 
 
@@ -42,12 +28,20 @@ def E(n):
 
 
 def antisymmetrize(Psis):
+    def phi2D(int nx, int ny,float length, float x, float y):
+        '''eigenstate of electron in a 2D periodic box.
+           n is a tuple for quantum number (nx, ny)
+        '''
+        return (sqrt(2. / length) *
+                        cos(nx*2*pi*x/length) *
+                        cos(n[1]*2*pi*y/length))
+
+
     '''from the arrays of wavefunction functions, return their slater
     determinant and slater matrix'''
     def psi(xs):
-        slatermatrix = matrix([[Psi(*x) for Psi in Psis]
-                                     for x in xs])
-
+        slatermatrix = matrix(array([[Psi(*x) for Psi in Psis]
+                                     for x in xs]))
         slaterlogdet = slogdet(slatermatrix)
         return slaterlogdet[0] * exp(slaterlogdet[1]) / sqrt(factorial(len(xs))), slatermatrix
     return psi
@@ -56,7 +50,7 @@ def antisymmetrize(Psis):
 #from scipy.weave import blitz
 def wfgridcreator(wavefunction, X, Y):
     '''return grid of a "complicated" function'''
-    #meshsize = len(X)
+    meshsize = len(X)
     # I have tried:
     # 1. blitz: nope, my code is too abstract
     # 2. don't even wfgrid[0:-1,0:-1] = wavefunction(X[0:-1], Y[0:-1])
@@ -155,40 +149,18 @@ def zeroplotter(zerox, zeroy, otherelectrons):
 
 
 class Electrons:
-    def __init__(self, higheststate, length, meshsize=None):
-        self.length = length
-        self.higheststate = higheststate
-        self.meshsize = meshsize
+    def __init__(self, N_electrons, wf_1particle, length):
         self.starttime = time.time()
-#http://www.theo3.physik.uni-stuttgart.de/lehre/ss08/sst/Script-AHCN-Chap-6.pdf
-        self.quantum_numbers = array([i for i in
-            product(range(-self.higheststate, self.higheststate+1),
-                repeat=2) if norm(i) <= self.higheststate ])
-
-        self.N_electrons = len(self.quantum_numbers)
-        print self.N_electrons
-
-        # wavefunction computation
-        # array of wavefunctions used in total ground state wf
-        self.wf_1particle = array([phi2D(i, length) for i in self.quantum_numbers])
-
-
-
+        self.N_electrons = N_electrons
         # generate position for background electrons, of dimension (n, 2)
-        self.pos = length * random((self.N_electrons - 1, 2))
-        #self.pos = array([[ 1.17253759,  0.76248715],
-                #[ 0.55659908,  0.8677818 ],
-                #[ 1.70763184,  0.35243496],
-                #[ 1.84601349,  0.84027975],
-                #[ 0.37452466,  1.80036508],
-                #[ 0.67844901,  0.73389094],
-                #[ 0.89556134,  1.83766219],
-                #[ 1.84195774,  1.58432459],
-                #[ 0.5413078,   0.12694015],
-                #[ 1.39434316,  1.21330462],
-                #[ 1.49001942,  1.09599095],
-                #[ 0.95245113,  0.26030348]])
-        
+        #self.pos = length * random((N_electrons - 1, 2))
+        self.pos = array([[ 0.95045864,  1.39100804],
+                [ 0.12410101,  1.73416674],
+                [ 1.90899799,  0.76060809],
+                [ 0.08314922,  0.32317986],
+                [ 0.78967509,  0.12436469]])
+
+        self.wf_1particle = wf_1particle
 
         # precompute other electrons' determinant once for all
         # what does this physically mean?
@@ -202,36 +174,9 @@ class Electrons:
             eachsign = pow(-1, 2 + i)
             # effective wf if you fix other electrons
             det, mat = antisymmetrize(delete(self.wf_1particle, i, 0))(self.pos)
-
-
-
             self.det_signed.append(eachsign * det)
             self.slatermatrix_signed.append(eachsign * mat)
         #return otherelectrons_det_signed, otherelectrons_slatermatrix_signed
-
-    #performancetestjuly31
-    def precompute_det(self):
-        def phi2D(n, length, x):
-            return (sqrt(2. / length) *
-                        exp(1j*(n[0]*2*float64(pi)*x[0]/length +
-                            n[1]*2*float64(pi)*x[1]/length)))
-        self.det_signed = []
-        self.slatermatrix_signed = []
-        almost_matrix = array([[phi2D(j, self.length, x) for j in
-            self.quantum_numbers] for x in self.pos])
-
-        for i in range(self.N_electrons):
-            eachsign = pow(-1, 2 + i)
-            # effective wf if you fix other electrons
-
-            mat = matrix(delete(almost_matrix, i, 1))
-
-            slaterlogdet = slogdet(mat)
-            det = (slaterlogdet[0] * exp(slaterlogdet[1]) /
-            sqrt(factorial(len(self.pos))))
-
-            self.det_signed.append(eachsign * det)
-            self.slatermatrix_signed.append(eachsign * mat)
 
 
     def updatepos(self, index, deltaxy):
@@ -253,25 +198,15 @@ class Electrons:
         self.precompute_det()
 
 
-    def eff_wavefunction(self, x, y):
-        return sum([self.wf_1particle[i](x,y) *
-            self.det_signed[i] for i in range(self.N_electrons)])
-
-
-    #performancetweakaug1
     def eff_wavefunction(self):
-        return vectorize(lambda x,y: dot(sqrt(2. / self.length) *
-                    exp(1j*2*pi/self.length*dot(self.quantum_numbers,(x,y))),
-            array(self.det_signed)))
-
+        return (lambda x, y: sum([self.wf_1particle[i](x,y) *
+            self.det_signed[i] for i in range(self.N_electrons)]))
 
     def surfaceplot(self, X, Y, wavefunction, save=False):
         '''Compute the 2D surface contour plot of a wavefunction'''
-        #wfgrid = wfgridcreator(wavefunction, X, Y)
-        #performancetweakaug1
-        wfgrid = wavefunction(X, Y)
+        wfgrid = wfgridcreator(wavefunction, X, Y)
         otherelectrons_plot = self.pos.T
-        #wfcontour = pcolor(X,Y,wfgrid)
+        #pcolor(X,Y,wfgrid)
         wfcontour = contour(X, Y, wfgrid, levels=[0])
         #wfcontour = contour(X, Y, wfgrid)
         plot(otherelectrons_plot[0], otherelectrons_plot[1], 'ro')
@@ -285,8 +220,8 @@ class Electrons:
         #colorbar()
         timestamp = time.strftime("%b%d%Y-%H-%M")
         if save:
-            savefig("plots/report2/%delectrons-%dmeshsize-%dlength-%s.png"%(self.N_electrons,
-                      self.meshsize, self.length,timestamp))
+            savefig("plots/report1/%delectrons-%dmeshsize-%dlength-%s.png"%(self.N_electrons,
+                      meshsize, length,timestamp))
         return wfcontour
 
 

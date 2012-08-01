@@ -80,20 +80,32 @@ def plotsurfaceanimate(X,Y,Z):
         ax.plot_surface(X,Y,i)
         draw()
 
-def createvideo(spectrums, plotter, directory=''):
-        #http://dawes.wordpress.com/2007/12/04/animating-png-files/
-        #http://stackoverflow.com/questions/4092927/generating-movie-from-python-without-saving-individual-frames-to-files
-        #http://www.scipy.org/Cookbook/Matplotlib/Animations
-    command = ('ffmpeg','-i', '%03d.png', 'out.mp4', '-r', '25')
+def createvideo(figures):
+    #http://dawes.wordpress.com/2007/12/04/animating-png-files/
+    #http://stackoverflow.com/questions/4092927/generating-movie-from-python-without-saving-individual-frames-to-files
+    #http://www.scipy.org/Cookbook/Matplotlib/Animations
+    import tempfile
+    directory = tempfile.gettempdir()
+    #http://forum.videohelp.com/threads/306745-Slow-motion-with-ffmpeg
+    #http://ffmpeg.org/trac/ffmpeg/wiki/How%20to%20speed%20up%20/%20slow%20down%20a%20video
+    command = ('ffmpeg','-i', directory + '/%03d.png', 'out.mp4', '-vcodec',
+            'mpg4', '-vf', '"setpts=40.0*PTS"', '-y', '-r', '1')
+    #command = ('convert', directory + '/%03d.png', 'out.gif')
+    #command = ('mencoder', 'mf:/'+directory+'/%03.png', '-speed', '0.4', '-mf',
+            #'w=800:h=600:fps=25:type=png', '-ovc', 'lavc', '-lavcopts',
+            #'vcodec=mpeg4:mbd2:trell', '-oac', 'copy', '-o', 'output.avi' )
+    # -y is for auto-overwrite
     #convert -delay 50 Th*.JPG anim.mpg
 
-    for i in range(len(spectrums)):
-        plotter(*spectrums[i])
-        filename = directory + '%03d.png'%i
-        savefig(filename)
-        print('Wrote file '+ filename)
+    for i in range(len(figures)):
+        filename = directory + '/%03d.png'%i
+        figures[i].savefig(filename)
+        #print('Wrote file '+ filename)
         clf()
     os.spawnvp(os.P_WAIT, 'ffmpeg', command)
+    #os.spawnvp(os.P_WAIT, 'mencoder', command)
+    #os.spawnvp(os.P_WAIT, 'convert', command)
+
 
 ##########################
 ###New since April 2012###
@@ -106,4 +118,27 @@ def plot2Dwavefunction(X,Y,wf):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('$\psi$')
+
+
+#####
+# QHO
+#####
+def hermite(n, x): # return H n(x)
+    if n < 0:
+        return 0.0
+    elif n == 0:
+        return 1.0
+    else:
+        return 2*x*hermite(n-1, x) - 2*(n-1)*hermite(n-2, x)
+
+
+def QHO_psi_n(n, x, m, omega):
+    """1D QHO eigenfunctions"""
+    #http://en.wikipedia.org/wiki/Quantum_harmonic_oscillator
+    #nu = m * omega / hbar
+    nu = m * omega
+    # normalization coefficient
+    C =  (nu/pi)**(1/4) * sqrt(1/(2**n*factorial(n)))
+    return C * exp(-nu* x**2 /2) * hermite(n, sqrt(nu)*x)
+
 

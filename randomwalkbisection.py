@@ -28,7 +28,9 @@ class bisect:
 
     def walk(self):
         cursorbefore = array(self.cursor)
-        self.cursor += array([choice([-1,1]), choice([-1,1])])
+        self.cursor += array(choice([[1.,0],[-1.,0],[.5,.5*sqrt(3)],
+            [-.5,.5*sqrt(3)],
+            [.5,-.5*sqrt(3)], [-.5,-.5*sqrt(3)]]))
         if not self._inbound():
             self.cursor = cursorbefore
             self.walk()
@@ -45,7 +47,7 @@ class bisect:
         print("found")
         self.xdirection = sign(self.cursor[0] - cursorbefore[0])
         self.ydirection = sign(self.cursor[1] - cursorbefore[1])
-        self.diagonal = 1 # 1 for diagonal shift
+        self.diagonal = 0 # 1 for diagonal shift
         self.atnode = True
 
 
@@ -54,8 +56,8 @@ class bisect:
         cursornow = self.nodepoints[-1]
         print(cursornow)
         #xmovement
-        if self.diagonal:
-            #diagonal
+        if not self.diagonal:
+            #horizontal
             if sign(cursornow[0]-cursorbefore[0]) == self.xdirection:
                 cursorused = cursorbefore
                 othercursor = cursornow
@@ -66,25 +68,56 @@ class bisect:
             if self._checksignflip(othercursor,self.cursor):
                 self.ydirection *= -1
             else:
-                self.diagonal = 0
+                self.diagonal = 1
                 self.xdirection *= -1
         else:
-            #horizontal
+            #diagonal
             self.cursor += [self.xdirection,-self.ydirection]
-            self.diagonal = 1
+            self.diagonal = 0
             if self._checksignflip(cursornow,self.cursor):
                 self.xdirection *= -1
         self.nodepoints.append(self.cursor)
 
         print("found next")
 
+    def searchnextsignflip(self):
+        before, now = self.nodepoints[-2], self.nodepoints[-1]
+        print now
+        if not self.diagonal:
+            new = now + [2*self.xdirection,0]
+            self.diagonal = 1
+            if self._checksignflip(new, now):
+                self.nodepoints.append(new)
+            else:
+                self.ydirection = sign(self.nodepoints[-2][1]-
+                        self.nodepoints[-1][1])
+                del self.nodepoints[-1]
+                self.nodepoints.append(before + [2*self.xdirection,0])
+                #self.ydirection *= -1
+            self.xdirection = sign(self.nodepoints[-2][0]- self.nodepoints[-1][0])
+        else:
+            new = now + [self.xdirection, self.ydirection]
+            self.diagonal = 0
+            if self._checksignflip(new, now):
+                self.nodepoints.append(new)
+                self.xdirection = sign(self.nodepoints[-2][0]- self.nodepoints[-1][0])
+
+            else:
+                del self.nodepoints[-1]
+                self.nodepoints.append(before + [-self.xdirection,
+                    self.ydirection])
+        print("found next")
+
+
+
     def searchsignflips(self):
         if not self.atnode:
             self.search1stsignflip()
-        for i in range(20):
+        for i in range(70):
             self.searchnextsignflip()
 
 
+ion()
 a = bisect(fn)
 a.searchsignflips()
 #a.search1stsignflip()
@@ -106,4 +139,4 @@ print xmin, ymin, xmax, ymax
 #ylim(0,length)
 #ylim(ymin-1,ymax+1)
 print(time()-t0)
-show()
+raw_input()

@@ -87,10 +87,14 @@ def createvideo(figures, prefix=None):
     #http://www.scipy.org/Cookbook/Matplotlib/Animations
     import tempfile
     directory = tempfile.gettempdir()
+    pref = 0
+    if prefix: pref = time.strftime("%b%d%Y")
+    else: pref = ''
+
     os.spawnvp(os.P_WAIT, 'trash', ('trash', directory + '/*'))
     #http://forum.videohelp.com/threads/306745-Slow-motion-with-ffmpeg
     #http://ffmpeg.org/trac/ffmpeg/wiki/How%20to%20speed%20up%20/%20slow%20down%20a%20video
-    command = ('ffmpeg','-i', directory + '/%03d.png', 'out.mp4', '-vcodec',
+    command = ('ffmpeg','-i', directory + '/%03d.png', 'out%s.mp4' % pref, '-vcodec',
             'mpg4', '-vf', '"setpts=40.0*PTS"', '-y', '-r', '1')
     #command = ('convert', directory + '/%03d.png', 'out.gif')
     #command = ('mencoder', 'mf:/'+directory+'/%03.png', '-speed', '0.4', '-mf',
@@ -98,8 +102,6 @@ def createvideo(figures, prefix=None):
             #'vcodec=mpeg4:mbd2:trell', '-oac', 'copy', '-o', 'output.avi' )
     # -y is for auto-overwrite
     #convert -delay 50 Th*.JPG anim.mpg
-    if prefix: pref = time.strftime("%b%d%Y")
-    else: pref = ''
 
     for i in range(len(figures)):
         filename = directory + '/%s%03d.png'%(pref, i)
@@ -116,7 +118,7 @@ def tempdir():
 
 
 def createvideofromdirectory(directory):
-    command = ('ffmpeg','-i', directory + '/' + pref + '%03d.png', 'out.mp4', '-vcodec',
+    command = ('ffmpeg','-i', directory + '/%03d.png', 'out.mp4', '-vcodec',
             'mpg4', '-vf', '"setpts=40.0*PTS"', '-y', '-r', '1')
     os.spawnvp(os.P_WAIT, 'ffmpeg', command)
 

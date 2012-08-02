@@ -1,4 +1,5 @@
-all: libferminode.so output.mp4
+#all: libferminode.so output.mp4
+all: output.mp4
 	#output.mp4
 
 libferminode.so:

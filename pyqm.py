@@ -7,6 +7,7 @@
 from pylab import *
 #from fipy import *
 from mpl_toolkits.mplot3d import Axes3D
+from scipy.misc import factorial
 import os
 import time
 
@@ -20,33 +21,42 @@ smax = matrix([[0,0],[1,0]])
 #helper functions
 def renormalize(x): return x/norm(x)
 
+
 def create1Dmesh(dx,nx):
     L = nx * dx
     #return linspace(-L,L,nx)
     return arange(-L/2.,L/2.,dx)
+
 
 def create2Dmesh(dx,nx):
     L = nx * dx
     X = arange(-(L-1)/2, (L+1)/2,dx)
     return meshgrid(X,X) 
 
+
 def create2DmeshK(dx,nx):
     Kx = linspace(-pi, pi, num = nx)
     return Kx, Kx
 
+
 def gaussian(x, sigma):
     return  exp(-x*x/(2.*sigma**2))/sqrt(2.*pi*sigma**2)
+
 
 def xtop(wavefn):
     '''convert position space wavefn into momentum space wavefn'''
     #http://docs.scipy.org/doc/numpy/reference/routines.fft.html#background-information
     return fftshift(abs(fftn(wavefn)))
 
+
 def ptox(wavefn):
     return fftshift(abs(ifftn(wavefn)))
 
+
 def laplacematrix(dx,nx):
     return matrix((diag(ones(nx-1),1) + diag(ones(nx-1),-1) + diag(-2*ones(nx))) / (dx*dx))
+
+
 def laplace(x,dx):
     ##from scipy.ndimage.filters import laplace
     #the line above doesn't work because our wavefunction is complex

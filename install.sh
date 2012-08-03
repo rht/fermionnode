@@ -18,7 +18,7 @@ fi
 #virtualenv ferminode
 
 echo "installing numpy..."
-pip install numpy
+pip install --upgrade numpy
 
 # assuming that you have fortran, if not
 hash gfortran &> /dev/null
@@ -31,10 +31,10 @@ fi
 
 
 echo "installing scipy..."
-pip install scipy
+pip install --upgrade scipy
 # pip install -e git+https://github.com/scipy/scipy#egg=scipy-dev
 
 
 # pip install git+https://github.com/matplotlib/matplotlib.git#matplotlib-dev
 echo "installing matplotlib..."
-pip install matplotlib
+pip install --upgrade matplotlib

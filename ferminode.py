@@ -41,6 +41,7 @@ report = 2
 #############################
 if report is 0:
     # what does the wavefunction look like for 2 electrons in 1 dimension?
+    # This appears in ceperley's paper somehow
     ion()
     oneD2electrons = lambda x, y: (phi1D(1, length)(x) * phi1D(0, length)(y)-
     phi1D(0, length)(x) * phi1D(1, length)(y))
@@ -75,7 +76,7 @@ if report is 1:
 # interactive plotting
 ######################
 
-# learned from here http://kitchingroup.cheme.cmu.edu/software/python/matplotlib/interactive-annotations-in-matplotlib
+# learned from here and many other google pages, http://kitchingroup.cheme.cmu.edu/software/python/matplotlib/interactive-annotations-in-matplotlib
 if report is 2:
     fig = figure()
     directory = tempdir()
@@ -98,7 +99,7 @@ if report is 2:
     def onkey(event):
         if event.key in ('q','Q'): exit()
         if event.key in 's': return
-        if event.key in 'e':
+        if event.key in 'e': return
             #num = input("give me the number of electrons")
         elif int(event.key) < otherelectrons.N_electrons - 1:
             print "active electron %s" % event.key

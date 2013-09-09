@@ -9,9 +9,10 @@ import matplotlib.animation as animation
 # Initialization
 ################
 
+tic = checktime()
 meshsize = 100
 length = 2  # size of the box
-higheststate = 2
+higheststate = 6
 dimension = 2
 X = linspace(0, length, num=meshsize)  # initialize coordinates
 XX, YY = meshgrid(X, X)
@@ -33,7 +34,7 @@ otherelectrons = Electrons(higheststate, length, meshsize=meshsize)
 #########################################
 # Plotting the wavefunction cross section
 #########################################
-report = 2
+report = 1
 
 
 # report 0
@@ -64,11 +65,13 @@ if report is 1:
     #raw_input()
     otherelectrons.surfaceplot(XX, YY, otherelectrons.eff_wavefunction(),
             save=0)
-    draw()
-    #raw_input()
+    #draw()
+    tic()
+    raw_input()
     # moral of the story: exchanging electrons doesn't change the feature of the
     # zeros
-    show()
+    #show()
+
     exit()
 
 
@@ -78,6 +81,7 @@ if report is 1:
 
 # learned from here and many other google pages, http://kitchingroup.cheme.cmu.edu/software/python/matplotlib/interactive-annotations-in-matplotlib
 if report is 2:
+    #ion()
     fig = figure()
     directory = tempdir()
     i = 0
@@ -111,8 +115,9 @@ if report is 2:
     fig.canvas.mpl_connect('button_press_event', onclick)
     fig.canvas.mpl_connect('key_press_event', onkey)
     fig.canvas.mpl_connect('motion_notify_event', onclick)
-    show()
     #raw_input()
+    show()
+    #show(open_plot=True)
     #createvideofromdirectory(directory)
     exit()
 

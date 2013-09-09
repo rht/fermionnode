@@ -1,7 +1,48 @@
+Fermionic quantum criticality and the fractal nodal surface
+http://arxiv.org/pdf/0804.2161v1.pdf
+Solution of the Schrödinger equation by a spectral method ☆
+http://www.sciencedirect.com/science/article/pii/0021999182900912
+An Efficient Numerical Spectral Method for Solving the Schrödinger Equation
+http://dl.acm.org/citation.cfm?id=1098532
+http://www.quantum-espresso.org/?page_id=16
+matlab spectral method
+http://www.mathworks.ir/downloads/Spectral%20Methods%20in%20MATLAB%5Bwww.mathworks.ir%5D.pdf
+An Efficient Chebyshev–Lanczos Method for Obtaining Eigensolutions of the Schrödinger Equation on a Grid
+http://www.sciencedirect.com/science/article/pii/S0021999196901400
+Numerical Solutions of the Schr¨odinger Equation
+http://physics.bu.edu/~py502/lectures4/schrod.pdf
+Solving the discretized time‐independent Schrödinger equation with the Lanczos procedure
+http://jcp.aip.org/resource/1/jcpsa6/v92/i7/p4374_s1
+IMPORTANT
+http://www.itp.phys.ethz.ch/education/lectures_fs08/cqp/cqp
+K2D
+http://math.mit.edu/classes/18.086/2006/project1-Dominguez.pdf
+http://ocw.mit.edu/courses/mathematics/18-086-mathematical-methods-for-engineers-ii-spring-2006/assignments/
+
+
 ##Early results
 ![nodes](https://github.com/rht/fermionnode/raw/master/plots/report2/113electrons-100meshsize-2length-Aug012012-02-15.png)
+#atomic, precise steps. to take action whenever I know how to do so.
+
+##'useful' code to learn from
+https://github.com/NNemec/NNlib
 
 ##Done
+**Dec 2**
+* seed() and then st = get_state() to store seed to repeat a random simulation
+* cffi to call C function
+
+**Nov 21**
+* in vals, vecs = eigs(matrix), separate the vectors based on v[:,i], (i.e. scipy's eigs works to give us the proper eigenvector, of course) so, there is no need to implement the diagonalization algorithm manually (but I learned the lanczos algorithm other diagonalization method (another e.g. power iteration) along the way)
+* use scipy.spy to display matrix
+* finfo(float)
+
+**Nov 6**
+* https://code.google.com/p/glumpy/ for rapid GPU-based numpy array visualization. see example in toy/ folder.
+* alternative to matplotlib, 'ggplot', https://github.com/ContinuumIO/Bokeh
+**Oct 31**
+* considering using hdf5 for efficient storing
+
 **Jul 30**
 6 electron 100 meshsize improves from 2.12s to 1.68s
 

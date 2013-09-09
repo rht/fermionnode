@@ -1,35 +1,33 @@
 import sys
 from pylab import *
-#from pyqm import createvideo, createvideofromdirectory, tempdir
+from pyqm import createvideo, createvideofromdirectory, tempdir, QHO_psi2D, checktime
 #from scipy.optimize import fsolve, broyden1, broyden2, newton_krylov, newton
 from scipy.constants import hbar
 from scipy.misc import factorial
 from itertools import permutations, product
 import time
+import h5py
 
 # QHE
 # http://www.itp.phys.ethz.ch/education/lectures_fs11/solid/QHE.pdf
 # http://online.physics.uiuc.edu/courses/phys598PTD/fall09/L16.pdf
 
 
-def phi2D(n, length):
+def phi2D(n, length, x):
     '''
        eigenstate of electron in a 2D periodic box.
        n is a tuple for quantum number (nx, ny)
        real part, hence e^ikx and e^-ikx should look the same
     '''
-    def result(*x):
-        #PBC
-        #return (sqrt(2. / length) *
-                    #cos(n[0]*2*float64(pi)*x[0]/length) *
-                    #cos(n[1]*2*float64(pi)*x[1]/length))
-        return (sqrt(2. / length) *
-                    exp(1j*2*pi/length* dot(n, x)))
-    return result
 
-def phi2Dlessfancy(n, length, x):
     return (sqrt(2. / length) *
-            exp(1j*2*pi/length*dot(n, x)))
+            exp(1j*2*pi/length* dot(n, x)))
+
+
+
+#def phi2D(n, length, x):
+    #return QHO_psi2D(n, x, 1, 1)
+
 
 
 def phi1D(n, length):
@@ -58,9 +56,8 @@ def antisymmetrize(Psis):
     return psi
 
 
-#from scipy.weave import blitz
 #old
-def wfgridcreator(wavefunction, X, Y):
+def wfgridcreator(meshsize, wavefunction, X, Y):
     '''return grid of a "complicated" function, might be useful in the future'''
     #meshsize = len(X)
     # I have tried:
@@ -157,6 +154,11 @@ def zeroplotter(zerox, zeroy, otherelectrons):
     ylim(0,length)
     #title("fermion nodes for %d electrons -- total time %fs" %(N_electrons,time.time()-starttime))
     #savefig("plots/%delectrons-%dmeshsize-%dlength-nodes-%s.png"%(N_electrons,meshsize,length,timestamp))
+    wffile = h5py.File("plots/wfgrid-%delectrons-%dmesh-%dlength-%s.hdf5"%(N_electrons,meshsize,length,timestamp),
+            'a')
+    wffile.create_dataset('wfgrid', data=wfgrid)
+    wffile.close()
+    
     #savetxt("plots/wfgrid-%delectrons-%dmeshsize-%dlength-%s.txt"%(N_electrons,meshsize,length,timestamp), wfgrid)
 
 
@@ -205,7 +207,6 @@ def createvideofromdirectory(directory):
 
 
 
-
 class Electrons:
     def __init__(self, higheststate, length, meshsize=None):
         self.active_electron = 0
@@ -214,22 +215,22 @@ class Electrons:
         self.meshsize = meshsize
         self.starttime = time.time()
 #http://www.theo3.physik.uni-stuttgart.de/lehre/ss08/sst/Script-AHCN-Chap-6.pdf
-        self.quantum_numbers = array([i for i in
-            product(range(-self.higheststate, self.higheststate+1),
-                repeat=2) if norm(i) <= self.higheststate])
+        #self.quantum_numbers = [i for i in
+            #product(range(-self.higheststate, self.higheststate+1),
+                #repeat=2) if norm(i) <= self.higheststate]
+
+        #for QHO
+        self.quantum_numbers = [i for i in
+            product(range(0, self.higheststate+1),
+                repeat=2) if norm(i) <= self.higheststate]
+
 
         self.N_electrons = len(self.quantum_numbers)
-        print "number of electrons %d" %self.N_electrons
-
-        # wavefunction computation
-        # array of wavefunctions used in total ground state wf
-        self.wf_1particle = array([phi2D(i, length) for i in self.quantum_numbers])
-
+        print "number of electrons %d" % self.N_electrons
 
 
         # generate position for background electrons, of dimension (n, 2)
         self.pos = length * random((self.N_electrons - 1, 2))
-        print self.pos
         #self.pos = array([[ 1.17253759,  0.76248715],
                 #[ 0.55659908,  0.8677818 ],
                 #[ 1.70763184,  0.35243496],
@@ -242,23 +243,29 @@ class Electrons:
                 #[ 1.39434316,  1.21330462],
                 #[ 1.49001942,  1.09599095],
                 #[ 0.95245113,  0.26030348]])
-        
+
+
+        # new method aug3
+#        self.X = linspace(0, self.length, num=self.meshsize)  # initialize coordinates
+        #self.XX, self.YY = meshgrid(self.X, self.X)
+
+        #self.pos = np.random.choice(range(self.N_electrons - 1), size=(self.N_electrons-1,2))
+        #import os.path
+        #if os.path.isfile("wavefunctiondictionary/free2D.npy"):
+            #self.wfdictionaries = np.load("wavefunctiondictionary/free2D.npy")
+        #else:
+            #self.wfdictionaries = array([vectorize(phi2D(i,
+                #self.length))(self.XX,self.YY) for i in
+                #self.quantum_numbers])
+            #np.save("wavefunctiondictionary/free2D.npy", self.wfdictionaries)
+
 
         # precompute other electrons' determinant once for all
         # what does this physically mean?
         self.precompute_det()
 
-
-    def precompute_det(self):
-        self.det_signed = []
-        self.slatermatrix_signed = []
-        for i in range(self.N_electrons):
-            eachsign = pow(-1, 2 + i)
-            # effective wf if you fix other electrons
-            det, mat = antisymmetrize(delete(self.wf_1particle, i, 0))(self.pos)
-
-            self.det_signed.append(eachsign * det)
-            self.slatermatrix_signed.append(eachsign * mat)
+    def phi2Ddict(self,n, x):
+        return self.wfdictionaries[self.quantum_numbers.index(n)][x[0], x[1]]
 
 
     #performancetestjuly31
@@ -267,8 +274,8 @@ class Electrons:
         self.det_signed = []
         self.slatermatrix_signed = []
         #crafted from the old wf_1particle
-        almost_matrix = array([[phi2Dlessfancy(j, self.length, x) for j in
-            self.quantum_numbers] for x in self.pos])
+        almost_matrix = array([phi2D(self.quantum_numbers, self.length, x)
+            for x in self.pos])
 
         for i in range(self.N_electrons):
             eachsign = pow(-1, 2 + i)
@@ -307,14 +314,18 @@ class Electrons:
         self.precompute_det()
 
 
-    #performancetweakaug1
+    #performancetweakaug1 2012
     def eff_wavefunction(self):
 #        return vectorize(lambda x,y: dot(sqrt(2. / self.length) *
                     #exp(1j*2*pi/self.length*dot(self.quantum_numbers,(x,y))),
             #array(self.det_signed)))
         return vectorize(lambda x,y: dot(phi2D(self.quantum_numbers,
-            self.length)(x,y),
-            array(self.det_signed)))
+            self.length, (x,y)), array(self.det_signed)))
+
+        #aug3  so that one doesn't have to compute the 2D wavefunction all the time
+#        return lambda x,y: dot([self.phi2Ddict(i,(x,y)) for i in
+            #self.quantum_numbers],
+            #array(self.det_signed))
 
 
     def plot_active_electron(self,color='go'):
@@ -327,9 +338,17 @@ class Electrons:
         #wfgrid = wfgridcreator(wavefunction, X, Y)
         #performancetweakaug1
         wfgrid = wavefunction(X, Y)
+        #aug3
+#        xi = range(self.meshsize)
+        #Xi, Yi =meshgrid(xi,xi)
+        #wfgrid = zeros(shape=shape(X))
+        #for i in xi:
+            #for j in xi:
+                ##print wavefunction((i,j))
+                #wfgrid[i,j]=wavefunction(X[i,j],Y[i,j])
+
         otherelectrons_plot = delete(self.pos, self.active_electron, 0).T
-        #wfcontour = pcolor(X,Y,wfgrid)
-        #wfcontour = contourf(X, Y, wfgrid, colors=('r','b'))
+        # alternative to contour: pcolor or contourf
         wfcontour = contour(X, Y, wfgrid, levels=[0])
         plot(otherelectrons_plot[0], otherelectrons_plot[1], 'ro')
         self.plot_active_electron()
@@ -343,8 +362,8 @@ class Electrons:
         #colorbar()
         timestamp = time.strftime("%b%d%Y-%H-%M-%S")
         if save:
-            #savefig("plots/report2/%delectrons-%dmeshsize-%dlength-%s.png"%(self.N_electrons,
-            savefig("plots/5electrons/%delectrons-%dmeshsize-%dlength-%s.png"%(self.N_electrons,
+            savefig("plots/report2/%delectrons-%dmeshsize-%dlength-%s.png"%(self.N_electrons,
+            #savefig("plots/5electrons/%delectrons-%dmeshsize-%dlength-%s.png"%(self.N_electrons,
                       self.meshsize, self.length,timestamp))
         return wfcontour
 

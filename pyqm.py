@@ -16,10 +16,16 @@ import sh
 from matplotlib import animation
 
 #utilities
-##1. timing
-class checktime:
+##1. timing.
+class tic:
+    #This can be used either in a context, or as a function
+    #http://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
     def __init__(self):
         self.tic = time.time()
+    def __enter__(self):
+        self.tic = time.time()
+    def __exit__(self):
+        print('Elapsed: %s s' % (time.time() - self.tic))
     def __iter__(self):
         return self
     #def next(self):
@@ -28,8 +34,10 @@ class checktime:
         #self.tic = self.toc
     def __call__(self):
         self.toc = time.time()
-        print("time spent %f"% (self.toc - self.tic))
+        print("Elapsed: %f s"% (self.toc - self.tic))
         self.tic = self.toc
+
+
 ##2. get source code
 def getsourcecode(fn):
     import inspect
@@ -363,50 +371,22 @@ def plotsurfaceanimate(X,Y,Z):
         draw()
 
 
-def createvideo(figures, prefix=None, outputdir='.'):
-    #http://dawes.wordpress.com/2007/12/04/animating-png-files/
-    #http://stackoverflow.com/questions/4092927/generating-movie-from-python-without-saving-individual-frames-to-files
-    #http://www.scipy.org/Cookbook/Matplotlib/Animations
-
-    #spawn* is obsolete, use subprocess
-    # this one is better http://stackoverflow.com/questions/6884991/how-to-delete-dir-created-by-python-tempfile-mkdtemp
-    #http://stackoverflow.com/questions/6128621/python-differences-between-tempfile-mkdtemp-and-tempfile-temporarydirectory
-    # this works but you have to delete it manually later directory = tempfile.mkdtemp()
-    import sys
-    if sys.version_info[0]==2:
-        # in python 2 you need to use tempdir (not available in standard lib)
-        import tempdir
-        tempdircreator = tempdir.TempDir
+def createvideo(xs=None,ys=None, prefix=None, outputdir='.'):
+    pref = time.strftime("%H-%M-%b%d%Y")
+    writer = animation.writers['ffmpeg'](fps=15)
+    fig = figure()
+    if xs is None:
+        l, = plot(ys[0])
+        with writer.saving(fig, outputdir+'/out'+prefix+pref+'.mp4', len(ys)-1):
+            for i in range(1, len(ys)):
+                l.set_ydata(ys[i])
+                writer.grab_frame()
     else:
-        #only in python 3
-        import tempfile
-        tempdircreator = tempfile.TemporaryDirectory
-
-    t= tempdircreator()
-    directory = t.name
-    pref = time.strftime("%H-%M-%b%d%Y") if prefix else ''
-
-    #http://forum.videohelp.com/threads/306745-Slow-motion-with-ffmpeg
-    #http://ffmpeg.org/trac/ffmpeg/wiki/How%20to%20speed%20up%20/%20slow%20down%20a%20video
-    command = ('ffmpeg','-y', '-i', directory + '/' + pref + '%03d.png',
-            '%s/out%s.mp4' % (outputdir, prefix+pref), '-vcodec',
-            'mpg4', '-vf', '"setpts=40.0*PTS"', '-r', '1')
-    #command = ('convert', directory + '/%03d.png', 'out.gif')
-    #command = ('mencoder', 'mf:/'+directory+'/%03.png', '-speed', '0.4', '-mf',
-            #'w=800:h=600:fps=25:type=png', '-ovc', 'lavc', '-lavcopts',
-            #'vcodec=mpeg4:mbd2:trell', '-oac', 'copy', '-o', 'output.avi' )
-    # -y is for auto-overwrite
-    #convert -delay 50 Th*.JPG anim.mpg
-
-    for i in range(len(figures)):
-        filename = directory + '/%s%03d.png'%(pref, i)
-        figures[i].savefig(filename)
-        #print('Wrote file '+ filename)
-        clf()
-    #proc = subprocess.Popen(' '.join(command))
-    print(' '.join(command))
-    proc = subprocess.call(command)
-    raw_input()
+        l, = plot(xs[0], ys[0])
+        with writer.saving(fig, outputdir+'/out'+prefix+pref+'.mp4', len(ys)-1):
+            for i in range(1, len(ys)):
+                l.set_data(xs[i], ys[i])
+                writer.grab_frame()
 
 
 def tempdir():
@@ -415,6 +395,10 @@ def tempdir():
 
 
 def createvideofromdirectory(directory,prefix='',outputdir='.'):
+    #http://dawes.wordpress.com/2007/12/04/animating-png-files/
+    #http://stackoverflow.com/questions/4092927/generating-movie-from-python-without-saving-individual-frames-to-files
+    #http://www.scipy.org/Cookbook/Matplotlib/Animations
+    #note that os.spawnvp is deprecated
     command = ('ffmpeg','-i', directory + '/%03d.png', outputdir+
             '/%sout.mp4'%prefix, '-vcodec',
             'mpg4', '-vf', '"setpts=40.0*PTS"', '-y', '-r', '1')
